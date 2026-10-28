@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["node"],
+    "paths": {
+      "@kit": ["./src/index.ts"]
+    }
+  },
+  "include": ["src", "examples", "studio", "render", "scripts", "remotion.config.ts"]
+}

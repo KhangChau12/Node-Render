@@ -1,0 +1,54 @@
+# ── Secrets ─────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Local data generated while running / testing ───────
+# Projects, TTS audio, AI-generated scene code, renders, database
+data/*
+!data/.gitkeep
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# ── Render output / Remotion cache ─────────────────────
+/out/
+/renders/
+*.mp4
+*.webm
+*.mov
+*.wav
+*.mp3
+!packages/kit/assets/**
+# The landing page ships its rendered reels and stills.
+!apps/site/public/media/**
+
+# ── Node / build ───────────────────────────────────────
+node_modules/
+.pnpm-store/
+.next/
+.next-*/
+dist/
+build/
+.turbo/
+.cache/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Logs ───────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ── OS / editor ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/

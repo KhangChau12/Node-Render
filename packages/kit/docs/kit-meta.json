@@ -1,0 +1,4865 @@
+[
+  {
+    "name": "TitleWithVisual",
+    "category": "layout",
+    "summary": "Title on top, a large illustration area below. The default layout for most scenes.",
+    "useWhen": [
+      "One main illustration: a plot, a formula, a diagram, a list"
+    ],
+    "avoidWhen": [
+      "Comparing two things side by side: use TwoColumn"
+    ],
+    "children": "One illustration (or one <div> holding several elements)",
+    "example": "graph-secant.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "def": "required",
+        "description": "Scene title, at most ~8 words"
+      },
+      {
+        "name": "kicker",
+        "type": "string",
+        "def": "–",
+        "description": "Small label above the title"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "align",
+        "type": "\"center\" | \"left\"",
+        "def": "\"center\"",
+        "description": "Alignment of the illustration"
+      }
+    ]
+  },
+  {
+    "name": "TwoColumn",
+    "category": "layout",
+    "summary": "Two columns side by side, with an optional title. Exactly two children: left, right.",
+    "useWhen": [
+      "Before/after, right/wrong, two ways of solving",
+      "Formula on the left, graph on the right"
+    ],
+    "avoidWhen": [
+      "Only one illustration: use TitleWithVisual"
+    ],
+    "children": "Exactly two elements: left column, right column",
+    "example": "two-column.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "kicker",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "def": "0.5",
+        "description": "Width ratio of the left column"
+      },
+      {
+        "name": "divider",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "FullVisual",
+    "category": "layout",
+    "summary": "The whole frame for one element, centered in the safe area.",
+    "useWhen": [
+      "An opening TitleCard",
+      "One formula or a big question on its own"
+    ],
+    "avoidWhen": [
+      "A scene title is needed: use TitleWithVisual"
+    ],
+    "children": "One element",
+    "example": "title-card.tsx",
+    "props": [
+      {
+        "name": "align",
+        "type": "\"center\" | \"left\"",
+        "def": "\"center\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "TitleCard",
+    "category": "component",
+    "summary": "A large title opening the lecture or a part of it, with a small label and a subtitle.",
+    "useWhen": [
+      "The opening scene of the video",
+      "Moving on to a new part of the lecture"
+    ],
+    "avoidWhen": [
+      "A title above an illustration: use the TitleWithVisual layout"
+    ],
+    "children": null,
+    "example": "title-card.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "kicker",
+        "type": "string",
+        "def": "–",
+        "description": "Small label above, e.g. \"Lesson 3 · Derivatives\""
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "align",
+        "type": "\"left\" | \"center\"",
+        "def": "\"left\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "BulletReveal",
+    "category": "component",
+    "summary": "A list of points appearing one by one, optionally numbered, with earlier points dimmed.",
+    "useWhen": [
+      "Listing 2–5 short points",
+      "End-of-lesson summary"
+    ],
+    "avoidWhen": [
+      "More than 5 points or points longer than 12 words: split into several scenes"
+    ],
+    "children": null,
+    "example": "bullets.tsx",
+    "props": [
+      {
+        "name": "items",
+        "type": "string | { text: string; at?: number | string }[]",
+        "def": "required",
+        "description": "The points; each is a string or { text, at }. Supports $…$ for math"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the first point appears (points without their own `at` follow `gap` apart)"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.8",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "\"display\" | \"title\" | \"heading\" | \"body\" | \"small\" | \"caption\" | \"label\"",
+        "def": "\"body\"",
+        "description": ""
+      },
+      {
+        "name": "numbered",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "focus",
+        "type": "boolean",
+        "def": "false",
+        "description": "Dim earlier points when a new one appears"
+      },
+      {
+        "name": "effect",
+        "type": "\"up\" | \"down\" | \"left\" | \"right\" | \"fade\" | \"pop\" | \"zoom\" | \"blur\" | \"wipe\" | \"flip\"",
+        "def": "\"left\"",
+        "description": "How each point appears"
+      }
+    ]
+  },
+  {
+    "name": "Formula",
+    "category": "component",
+    "summary": "Shows a math formula (LaTeX via KaTeX) with an entrance effect.",
+    "useWhen": [
+      "Formulas, definitions, equations"
+    ],
+    "avoidWhen": [
+      "A formula transformed over several steps: use FormulaSteps",
+      "A small symbol inside a sentence: write $…$ in the text"
+    ],
+    "children": null,
+    "example": "formula.tsx",
+    "props": [
+      {
+        "name": "tex",
+        "type": "string",
+        "def": "required",
+        "description": "LaTeX formula. In a JSX attribute (tex=\"…\") write \\ once; in a JS string use String.raw`…`"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "72",
+        "description": "Font size (px)"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "align",
+        "type": "\"left\" | \"center\"",
+        "def": "\"center\"",
+        "description": ""
+      },
+      {
+        "name": "reveal",
+        "type": "\"fade\" | \"write\"",
+        "def": "\"fade\"",
+        "description": "fade: fades in; write: appears left to right as if being written"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "–",
+        "description": "Time to appear (seconds); 0.7 for fade by default, by length for write"
+      }
+    ]
+  },
+  {
+    "name": "FormulaSteps",
+    "category": "component",
+    "summary": "Transforms a formula over several steps, each appearing with the narration.",
+    "useWhen": [
+      "Proofs, simplifications, step-by-step calculations"
+    ],
+    "avoidWhen": [
+      "Only one formula: use Formula"
+    ],
+    "children": null,
+    "example": "formula-steps.tsx",
+    "props": [
+      {
+        "name": "steps",
+        "type": "{ tex: string; at: number | string }[]",
+        "def": "required",
+        "description": "Transformation steps; each step replaces the previous one at `at`"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "72",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "keepPrevious",
+        "type": "boolean",
+        "def": "false",
+        "description": "Keep earlier steps (dimmed) above instead of replacing them"
+      }
+    ]
+  },
+  {
+    "name": "MathMorph",
+    "category": "component",
+    "summary": "Equation rewriting by \"matching symbols\": the formula is split into pieces, pieces present in both steps slide to their new place (moving a term across, factoring out), new pieces appear, removed ones fade out.",
+    "useWhen": [
+      "Solving an equation step by step: moving terms across, multiplying both sides, simplifying",
+      "Algebra where the viewer needs to see where each term goes"
+    ],
+    "avoidWhen": [
+      "A formula on its own: use Formula",
+      "Steps with nothing in common: use FormulaSteps"
+    ],
+    "children": null,
+    "example": "math-morph.tsx",
+    "props": [
+      {
+        "name": "steps",
+        "type": "{ at: number | string; tokens: string | { tex: string; key?: string; color?: Color }[] }[]",
+        "def": "required",
+        "description": "Each step is one line of the formula split into pieces. Pieces with the same TeX (or the same key) in two steps slide to their new place"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "80",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.1",
+        "description": "Duration of each transformation (seconds)"
+      },
+      {
+        "name": "spacing",
+        "type": "number",
+        "def": "0.12",
+        "description": "Extra space between pieces (em)"
+      }
+    ]
+  },
+  {
+    "name": "Derivation",
+    "category": "component",
+    "summary": "A multi-line solution aligned on \"=\" (with &): each line is written with the narration, its reason on the right; earlier lines dim, the final answer is framed.",
+    "useWhen": [
+      "Multi-step problems: solving equations, proofs, integrals, physics / chemistry exercises",
+      "When viewers need the earlier steps on screen to compare"
+    ],
+    "avoidWhen": [
+      "To see each term move: use MathMorph",
+      "One formula: use Formula"
+    ],
+    "children": null,
+    "example": "derivation-physics.tsx",
+    "props": [
+      {
+        "name": "lines",
+        "type": "{ tex: string; at: number | string; note?: string; tone?: Color; result?: boolean }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "54",
+        "description": ""
+      },
+      {
+        "name": "dim",
+        "type": "boolean",
+        "def": "true",
+        "description": "Dim earlier lines so the eye follows the new one"
+      }
+    ]
+  },
+  {
+    "name": "Axes",
+    "category": "component",
+    "summary": "A coordinate system holding math objects placed by coordinates (Plot, Point, Vector, Segment, Polygon, Circle, AreaUnder, Riemann, Tangent, VectorField, Angle, Label). `view` zooms/pans into a region and `matrix` transforms the whole plane.",
+    "useWhen": [
+      "Functions, several curves, points moving on a graph, sliding tangents, areas, Riemann sums",
+      "Vectors, linear transformations, determinants (grid=\"plane\" + matrix + basis)",
+      "Plane geometry with coordinates: triangles, circles, angles (axes={false} grid=\"none\")",
+      "Zooming into a point to see the curve become almost straight (view)"
+    ],
+    "avoidWhen": [
+      "Block diagrams, processes: use Diagram",
+      "Statistics: use BarChart"
+    ],
+    "children": "Coordinate objects only (Plot, Point, Vector, Segment, Polygon, Circle, AreaUnder, Riemann, Tangent, VectorField, Angle, Label)",
+    "example": "axes-complex.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "[number, number]",
+        "def": "[-5,5]",
+        "description": "x range shown [min, max]"
+      },
+      {
+        "name": "y",
+        "type": "[number, number]",
+        "def": "–",
+        "description": "y range; when empty it is chosen so 1 x unit = 1 y unit, centered on 0"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1300",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "720",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the axes appear (they draw out from the origin)"
+      },
+      {
+        "name": "axes",
+        "type": "boolean",
+        "def": "true",
+        "description": "Draw the two axes; false for pure geometry (shapes only, no axes)"
+      },
+      {
+        "name": "grid",
+        "type": "\"none\" | \"subtle\" | \"plane\"",
+        "def": "\"subtle\"",
+        "description": "subtle: faint grid; plane: clear blue coordinate plane (linear algebra); none"
+      },
+      {
+        "name": "ticks",
+        "type": "boolean",
+        "def": "true",
+        "description": "Numbers on the axes"
+      },
+      {
+        "name": "tickStep",
+        "type": "[number, number]",
+        "def": "–",
+        "description": "Tick step [x, y]; leave empty to choose automatically"
+      },
+      {
+        "name": "labels",
+        "type": "[string, string]",
+        "def": "[\"x\",\"y\"]",
+        "description": "Axis names, support $…$"
+      },
+      {
+        "name": "equal",
+        "type": "boolean",
+        "def": "false",
+        "description": "Keep 1 x unit = 1 y unit (circles look round); the box shrinks to keep the ratio"
+      },
+      {
+        "name": "view",
+        "type": "{ at: number | string; x: [number, number]; y: [number, number] }[]",
+        "def": "[]",
+        "description": "Math camera: at `at` the view window glides to a new x, y range (zoom into a point on a curve, zoom back out)"
+      },
+      {
+        "name": "matrix",
+        "type": "{ at: number | string; m: [[number, number], [number, number]] }[]",
+        "def": "[]",
+        "description": "Linear transformation of the whole plane: grid, vectors, points and shapes all follow. Each key is relative to the original matrix, not cumulative"
+      },
+      {
+        "name": "basis",
+        "type": "boolean",
+        "def": "false",
+        "description": "Show the basis vectors î (ok) and ĵ (err), following `matrix`"
+      },
+      {
+        "name": "warp",
+        "type": "{ at: number | string; fx: string; fy: string }[]",
+        "def": "[]",
+        "description": "NONLINEAR transformation of the whole plane: the point (x, y) goes to (fx, fy) and the grid bends with it. Complex map w = z²: { fx: \"x^2 - y^2\", fy: \"2*x*y\" }. Each key is relative to the original plane"
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "1.6",
+        "description": "Duration of each view/matrix change (seconds)"
+      }
+    ]
+  },
+  {
+    "name": "Stage",
+    "category": "component",
+    "summary": "A free stage (no axes, 1 x unit = 1 y unit, 16 × 9 units by default, origin in the center) for BUILDING PICTURES in any subject: place shapes by coordinates (Polygon, Circle, Path, Region, Spring, Vector, Segment, Point, Label), move them with Group / time, zoom with `view`.",
+    "useWhen": [
+      "Physics: inclined planes, pendulums, springs, forces (Vector), light through lenses, planetary orbits",
+      "Biology / geography: hand-drawn pictures (cells, leaves, rivers, simplified maps, wind directions) with Path, Circle, Label",
+      "Geometry without axes; a situation with concrete positions"
+    ],
+    "avoidWhen": [
+      "Block diagrams with arrows: use Diagram (lays itself out)",
+      "Function graphs: use Axes"
+    ],
+    "children": "Coordinate objects as in Axes (including Group)",
+    "example": "stage-physics.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "[number, number]",
+        "def": "[-8,8]",
+        "description": "Horizontal coordinate range; 16 units by default"
+      },
+      {
+        "name": "y",
+        "type": "[number, number]",
+        "def": "[-4.5,4.5]",
+        "description": "Vertical coordinate range; 9 units by default (16:9)"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1600",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "800",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "grid",
+        "type": "boolean",
+        "def": "false",
+        "description": "Show a faint grid"
+      },
+      {
+        "name": "view",
+        "type": "{ at: number | string; x: [number, number]; y: [number, number] }[]",
+        "def": "[]",
+        "description": "Math camera: at `at` the view window glides to a new x, y range (zoom into a point on a curve, zoom back out)"
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "1.6",
+        "description": "Duration of each view/matrix change (seconds)"
+      }
+    ]
+  },
+  {
+    "name": "Axes3D",
+    "category": "component",
+    "summary": "3D space seen through a camera that can orbit (`azimuth`, `elevation` by keyframes, `spin` turns by itself). Holds Surface, Curve3D, Point3D, Vector3D, Segment3D, Solid.",
+    "useWhen": [
+      "Solid geometry: pyramids, prisms, boxes (Solid, equal); hidden edges are dashed automatically",
+      "Functions of two variables z = f(x, y), surfaces, saddle points, extrema (Surface)",
+      "Vectors in space, space curves (helices), 3D trajectories"
+    ],
+    "avoidWhen": [
+      "Everything lies in one plane: a 2D Axes is clearer"
+    ],
+    "children": "3D objects only (Surface, Curve3D, Point3D, Vector3D, Segment3D, Solid)",
+    "example": "three-pyramid.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "[number, number]",
+        "def": "[-3,3]",
+        "description": ""
+      },
+      {
+        "name": "y",
+        "type": "[number, number]",
+        "def": "[-3,3]",
+        "description": ""
+      },
+      {
+        "name": "z",
+        "type": "[number, number]",
+        "def": "[-3,3]",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1200",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "760",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "equal",
+        "type": "boolean",
+        "def": "false",
+        "description": "The same scale on all three axes (REQUIRED for solid geometry so shapes are not distorted); false: each axis fits the box (surfaces, graphs)"
+      },
+      {
+        "name": "azimuth",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "-125",
+        "description": "Camera rotation around the z axis (degrees); keyframes to orbit"
+      },
+      {
+        "name": "elevation",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "22",
+        "description": "Camera elevation above the xy plane (degrees, -80…80)"
+      },
+      {
+        "name": "spin",
+        "type": "number",
+        "def": "0",
+        "description": "Steady rotation around the z axis, degrees per second (e.g. 8), so the viewer feels the depth"
+      },
+      {
+        "name": "zoom",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "1",
+        "description": "A fixed number, or keyframes [{ at: 0, value: 1 }, { at: \"cue:…\", value: 3 }]: the first key is the starting value, each later key moves smoothly to its value"
+      },
+      {
+        "name": "axes",
+        "type": "boolean",
+        "def": "true",
+        "description": "Draw the three axes x, y, z"
+      },
+      {
+        "name": "floor",
+        "type": "boolean",
+        "def": "true",
+        "description": "Faint grid on the plane z = 0 (or the floor of the box)"
+      },
+      {
+        "name": "labels",
+        "type": "[string, string, string]",
+        "def": "[\"x\",\"y\",\"z\"]",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Graph",
+    "category": "component",
+    "summary": "A function plot with axes and grid: the curve draws itself, moving tangents/secants, points and shaded areas.",
+    "useWhen": [
+      "Functions, slope, derivatives, extrema, integrals",
+      "A secant sliding into a tangent"
+    ],
+    "avoidWhen": [
+      "Statistical data charts",
+      "Plane geometry or diagrams: use Diagram"
+    ],
+    "children": null,
+    "example": "graph-secant.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string",
+        "def": "required",
+        "description": "Expression in x: \"x^2\", \"sin(x)\", \"2x+1\", \"sqrt(x)\"; supports sin cos tan sqrt abs exp ln log pi e"
+      },
+      {
+        "name": "domain",
+        "type": "[number, number]",
+        "def": "[-5,5]",
+        "description": "x range shown"
+      },
+      {
+        "name": "range",
+        "type": "[number, number]",
+        "def": "–",
+        "description": "y range; leave empty to compute it"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the axes appear"
+      },
+      {
+        "name": "draw",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the curve starts drawing (defaults to at)"
+      },
+      {
+        "name": "drawDuration",
+        "type": "number",
+        "def": "1.6",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Curve label, e.g. \"y = x²\""
+      },
+      {
+        "name": "axisLabels",
+        "type": "[string, string]",
+        "def": "[\"x\",\"y\"]",
+        "description": ""
+      },
+      {
+        "name": "grid",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1300",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "760",
+        "description": ""
+      },
+      {
+        "name": "tangent",
+        "type": "{ x: number; to?: number; at?: number | string; moveAt?: number | string; moveDuration?: number }",
+        "def": "–",
+        "description": "Tangent at x, can slide to `to`"
+      },
+      {
+        "name": "secant",
+        "type": "{ x1: number; x2: number; at?: number | string; shrinkAt?: number | string; shrinkTo?: number; shrinkDuration?: number; becomesTangentColor?: Color }",
+        "def": "–",
+        "description": "Secant through two points; the second point can slide to the first to illustrate the derivative"
+      },
+      {
+        "name": "points",
+        "type": "{ x: number; label?: string; at?: number | string; color?: Color }[]",
+        "def": "[]",
+        "description": ""
+      },
+      {
+        "name": "showSlope",
+        "type": "boolean",
+        "def": "false",
+        "description": "Show the slope of the tangent/secant"
+      },
+      {
+        "name": "slopeLabel",
+        "type": "string",
+        "def": "\"Slope\"",
+        "description": ""
+      },
+      {
+        "name": "area",
+        "type": "{ from: number; to: number; at?: number | string; color?: Color }",
+        "def": "–",
+        "description": "Shade the area under the curve from `from` to `to`"
+      }
+    ]
+  },
+  {
+    "name": "NumberLine",
+    "category": "component",
+    "summary": "A number line with automatic ticks: points moving by keyframes, arc jumps (addition/subtraction, sequences), shaded intervals for solution sets, zooming into a region.",
+    "useWhen": [
+      "Integers, addition and subtraction, absolute value",
+      "Solution sets of inequalities (closed/open endpoints)",
+      "Convergent sequences, zooming in around the limit"
+    ],
+    "avoidWhen": [
+      "When a y axis is needed: use Axes"
+    ],
+    "children": null,
+    "example": "number-line.tsx",
+    "props": [
+      {
+        "name": "range",
+        "type": "[number, number]",
+        "def": "[-5,5]",
+        "description": "Range shown [min, max]"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "def": "–",
+        "description": "Tick step; leave empty to choose automatically"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1400",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "ticks",
+        "type": "boolean",
+        "def": "true",
+        "description": "Show numbers under the ticks"
+      },
+      {
+        "name": "view",
+        "type": "{ at: number | string; range: [number, number] }[]",
+        "def": "[]",
+        "description": "Zoom/pan the number line to a new range at `at` (e.g. zoom in around √2)"
+      },
+      {
+        "name": "points",
+        "type": "{ x: number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]; label?: string; color?: Color; at?: number | string }[]",
+        "def": "[]",
+        "description": ""
+      },
+      {
+        "name": "jumps",
+        "type": "{ from: number; to: number; at: number | string; label?: string; color?: Color }[]",
+        "def": "[]",
+        "description": "An arc jump from `from` to `to` (addition, subtraction, sequences)"
+      },
+      {
+        "name": "intervals",
+        "type": "{ from: number; to: number; at?: number | string; color?: Color; closed?: [boolean, boolean]; label?: string }[]",
+        "def": "[]",
+        "description": "A highlighted interval on the line (solution set of an inequality)"
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "1.4",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "ArrayViz",
+    "category": "component",
+    "summary": "An array of cells driven step by step, animated: swaps (two cells arc around each other), inserts, writes, compared cells lifting, i/j pointers sliding, pivot, current range, region brackets, splitting into chunks (divide and conquer), cells bouncing when placed. Computes every position itself, text never overlaps.",
+    "useWhen": [
+      "Algorithms on arrays: sorting (quick, merge, insertion, bubble), binary search, two pointers, sliding window",
+      "Step-by-step simulation, one step per narration sentence"
+    ],
+    "avoidWhen": [
+      "More than 16 elements",
+      "More than ~10 steps in one scene: split the scene; the next scene starts from the previous end state (pass the new values)"
+    ],
+    "children": null,
+    "example": "array-quicksort.tsx",
+    "props": [
+      {
+        "name": "values",
+        "type": "number | string[]",
+        "def": "required",
+        "description": "Initial values, at most 16 cells"
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; swap?: [integer, integer]; move?: [integer, integer]; set?: { index: integer; value: number | string }[]; pointers?: object; compare?: integer[]; pivot?: integer | null; done?: integer[]; range?: [integer, integer] | null; regions?: { from: integer; to: integer; label?: string; tone?: Color }[]; note?: string; split?: integer[] }[]",
+        "def": "[]",
+        "description": "Steps in time order"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the array appears"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Array name shown on the left, e.g. \"A\""
+      },
+      {
+        "name": "showIndices",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      },
+      {
+        "name": "pointerTones",
+        "type": "object",
+        "def": "{}",
+        "description": "Color of each pointer, e.g. { i: \"ok\", j: \"info\" }"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1500",
+        "description": "Maximum width (px)"
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "0.6",
+        "description": "Duration of each step's motion (seconds)"
+      }
+    ]
+  },
+  {
+    "name": "Tree",
+    "category": "component",
+    "summary": "A tree that lays itself out (just declare parents): recursion trees, binary trees, classification trees. Nodes grow in, edges draw themselves; `visit` makes nodes bounce and light up in traversal order.",
+    "useWhen": [
+      "Recursion trees of quick sort / merge sort / Fibonacci",
+      "Binary search trees, heaps, decision trees"
+    ],
+    "avoidWhen": [
+      "Graphs with cycles or several parents: use Diagram",
+      "More than ~20 nodes"
+    ],
+    "children": null,
+    "example": "tree.tsx",
+    "props": [
+      {
+        "name": "nodes",
+        "type": "{ id: string; label: string; parent: string | null; at?: number | string; tone?: Color; toneAt?: number | string }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Default time; nodes without `at` appear in traversal order, `gap` apart"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.35",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1500",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "640",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "34",
+        "description": "Maximum font size in a node (shrinks when tight)"
+      },
+      {
+        "name": "visit",
+        "type": "{ id: string; at: number | string; tone?: Color }[]",
+        "def": "[]",
+        "description": "Traversal: nodes bounce and light up in turn (DFS, BFS, a search path). The node being visited has a glowing ring"
+      }
+    ]
+  },
+  {
+    "name": "Diagram",
+    "category": "component",
+    "summary": "Block diagram / discrete graph: nodes and arrows draw themselves in turn; `pulses` send a bright dot along edges, `highlights` recolor nodes with the narration (BFS, Dijkstra, data flow).",
+    "useWhen": [
+      "Processes, cause → effect chains",
+      "Graphs in algorithms (Dijkstra, BFS)",
+      "Concept maps"
+    ],
+    "avoidWhen": [
+      "Function graphs: use Graph",
+      "More than 10 nodes: split the scene"
+    ],
+    "children": null,
+    "example": "diagram.tsx",
+    "props": [
+      {
+        "name": "nodes",
+        "type": "{ id: string; label: string; x: number; y: number; at?: number | string; tone?: Color; shape?: \"box\" | \"circle\" }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "edges",
+        "type": "{ from: string; to: string; label?: string; at?: number | string; tone?: Color; directed?: boolean }[]",
+        "def": "[]",
+        "description": ""
+      },
+      {
+        "name": "pulses",
+        "type": "{ from: string; to: string; at: number | string; tone?: Color; duration?: number }[]",
+        "def": "[]",
+        "description": "A bright dot travelling along the edge from→to at time at: data/signal passing through, a BFS/DFS step"
+      },
+      {
+        "name": "highlights",
+        "type": "{ id: string; at: number | string; tone?: Color }[]",
+        "def": "[]",
+        "description": "Recolor a node's outline at time at (with a small bounce). The node keeps the color until changed again"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Default time for nodes/edges without `at`"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.3",
+        "description": "Delay between nodes appearing one by one"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1500",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "720",
+        "description": ""
+      },
+      {
+        "name": "nodeSize",
+        "type": "number",
+        "def": "34",
+        "description": "Font size in the nodes"
+      }
+    ]
+  },
+  {
+    "name": "BarChart",
+    "category": "component",
+    "summary": "A bar chart that grows in; with `steps` bars swap (sliding past each other), change height, lift when compared, turn green when done: sorting shown with bars.",
+    "useWhen": [
+      "Comparing quantities, running times, numbers of comparisons",
+      "Sorting algorithms shown with bar heights (bubble, selection, insertion)",
+      "Values changing over time"
+    ],
+    "avoidWhen": [
+      "A continuous function: use Graph",
+      "More than 16 bars",
+      "When i/j pointers and indices are needed: use ArrayViz"
+    ],
+    "children": null,
+    "example": "bar-sort.tsx",
+    "props": [
+      {
+        "name": "bars",
+        "type": "{ label: string; value: number; tone?: Color; at?: number | string; valueLabel?: string }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the first bar grows (bars without `at` follow `gap` apart)"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.4",
+        "description": ""
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; swap?: [integer, integer]; set?: { index: integer; value: number }[]; compare?: integer[]; done?: integer[]; tone?: { index: integer; tone: Color }[] }[]",
+        "def": "[]",
+        "description": "Steps in time: swap, change height, compare, mark done"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "def": "–",
+        "description": "Value at full height; the largest value by default"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1300",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "560",
+        "description": ""
+      },
+      {
+        "name": "showValues",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      },
+      {
+        "name": "unit",
+        "type": "string",
+        "def": "\"\"",
+        "description": "Unit written after the number, e.g. \" ms\""
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "0.6",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Table",
+    "category": "component",
+    "summary": "Comparison table: column headers, rows appear one by one, one row can be highlighted.",
+    "useWhen": [
+      "Comparing several options on a few criteria (complexity, stability, memory)",
+      "A table of x and f(x) values"
+    ],
+    "avoidWhen": [
+      "More than 8 rows or 6 columns: split the scene",
+      "Cells with long sentences: use Cards"
+    ],
+    "children": null,
+    "example": "table.tsx",
+    "props": [
+      {
+        "name": "columns",
+        "type": "string[]",
+        "def": "required",
+        "description": "Column header, supports $…$"
+      },
+      {
+        "name": "rows",
+        "type": "{ cells: string[]; at?: number | string; tone?: Color; toneAt?: number | string }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the table (column headers) appears; rows without `at` follow `gap` apart"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.5",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1500",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "34",
+        "description": "Font size in the cells"
+      }
+    ]
+  },
+  {
+    "name": "Cards",
+    "category": "component",
+    "summary": "2–4 cards side by side, each with a name and a few short points; cards can be highlighted in turn.",
+    "useWhen": [
+      "Comparing 2–4 options, variants or strategies (Lomuto vs Hoare, pivot choices)",
+      "Pros and cons"
+    ],
+    "avoidWhen": [
+      "Just one list of points: use BulletReveal",
+      "Comparing many criteria in a grid: use Table"
+    ],
+    "children": null,
+    "example": "cards.tsx",
+    "props": [
+      {
+        "name": "cards",
+        "type": "{ title: string; points?: string[]; tone?: Color; at?: number | string }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.6",
+        "description": "Delay between cards appearing (seconds)"
+      },
+      {
+        "name": "focus",
+        "type": "{ index: integer; at: number | string }[]",
+        "def": "[]",
+        "description": "Highlight one card at a time (the others dim) at these moments"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "–",
+        "description": "Width (px); fills the container by default. Cards wrap when tight"
+      }
+    ]
+  },
+  {
+    "name": "DotGrid",
+    "category": "component",
+    "summary": "A grid of dots (or squares) to count and talk about probability: groups are colored one by one with the narration, with counts.",
+    "useWhen": [
+      "Probability, \"1 in 100\" rates, Bayes' theorem, false positives",
+      "Percentages, fractions you can see, sample spaces"
+    ],
+    "avoidWhen": [
+      "Comparing large numbers between groups: use BarChart"
+    ],
+    "children": null,
+    "example": "dot-grid.tsx",
+    "props": [
+      {
+        "name": "count",
+        "type": "integer",
+        "def": "required",
+        "description": "Total number of dots (e.g. 100 people)"
+      },
+      {
+        "name": "cols",
+        "type": "integer",
+        "def": "–",
+        "description": "Number of columns; leave empty to choose automatically"
+      },
+      {
+        "name": "shape",
+        "type": "\"dot\" | \"square\"",
+        "def": "\"dot\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "–",
+        "description": "Size of each dot (px); chosen from the count by default"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the dots appear (spreading in)"
+      },
+      {
+        "name": "groups",
+        "type": "{ count: integer; color: Color; at: number | string; label?: string }[]",
+        "def": "[]",
+        "description": "Color in turn: each group colors the next `count` dots at `at`. E.g. 1 sick person in 100"
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "def": "true",
+        "description": "Show a legend of the groups (label + count) below"
+      }
+    ]
+  },
+  {
+    "name": "Callout",
+    "category": "component",
+    "summary": "A highlighted note box: definition, caution, tip, common mistake.",
+    "useWhen": [
+      "A short definition to remember",
+      "Warning about a common mistake"
+    ],
+    "avoidWhen": [
+      "The main content of a long scene: use BulletReveal"
+    ],
+    "children": null,
+    "example": "callout.tsx",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "def": "required",
+        "description": "Content, supports $…$"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "\"accent\" | \"info\" | \"ok\" | \"warn\" | \"err\"",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "900",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "CodeBlock",
+    "category": "component",
+    "summary": "A code block with line numbers: lines appear one by one, important lines are highlighted.",
+    "useWhen": [
+      "Programming and algorithm lectures"
+    ],
+    "avoidWhen": [
+      "Math formulas: use Formula",
+      "More than 18 lines: trim or split the scene"
+    ],
+    "children": null,
+    "example": "code-block.tsx",
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "def": "–",
+        "description": "File name shown above"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "lineGap",
+        "type": "number",
+        "def": "0.25",
+        "description": "Seconds between lines appearing; 0 to show all at once"
+      },
+      {
+        "name": "highlight",
+        "type": "integer[]",
+        "def": "[]",
+        "description": "Lines (counting from 1) to highlight"
+      },
+      {
+        "name": "highlightAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the highlight starts"
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; highlight: integer[] }[]",
+        "def": "[]",
+        "description": "Move the highlight with the narration: [{ at, highlight: [3] }, { at, highlight: [8] }]. Use this instead of several CodeBlocks"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "30",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Timeline",
+    "category": "component",
+    "summary": "Horizontal timeline: events appear one by one with the narration, labels alternate above/below, with icons; `focus` highlights one event.",
+    "useWhen": [
+      "History: the course of events, dynasties, campaigns",
+      "An author's life, the history of an invention, stages of development"
+    ],
+    "avoidWhen": [
+      "Steps of a process not tied to dates: use Diagram or Cycle"
+    ],
+    "children": null,
+    "example": "timeline-history.tsx",
+    "props": [
+      {
+        "name": "events",
+        "type": "{ date: string; label: string; at: number | string; tone?: Color; icon?: \"person\" | \"people\" | \"baby\" | \"student\" | \"book\" | \"pen\" | \"idea\" | \"question\" | \"check\" | \"cross\" | \"warning\" | \"star\" | \"heart\" | \"clock\" | \"calendar\" | \"search\" | \"target\" | \"trophy\" | \"flag\" | \"puzzle\" | \"home\" | \"school\" | \"building\" | \"factory\" | \"hospital\" | \"money\" | \"coins\" | \"cart\" | \"briefcase\" | \"scale\" | \"gavel\" | \"handshake\" | \"vote\" | \"newspaper\" | \"message\" | \"mail\" | \"quote\" | \"languages\" | \"library\" | \"theater\" | \"palette\" | \"brush\" | \"music\" | \"mic\" | \"camera\" | \"film\" | \"volume\" | \"phone\" | \"computer\" | \"code\" | \"database\" | \"cpu\" | \"wifi\" | \"lock\" | \"key\" | \"gear\" | \"cog\" | \"plug\" | \"rocket\" | \"satellite\" | \"calculator\" | \"plane\" | \"ship\" | \"sailboat\" | \"anchor\" | \"car\" | \"train\" | \"bike\" | \"ambulance\" | \"map\" | \"compass\" | \"pin\" | \"route\" | \"signpost\" | \"globe\" | \"earth\" | \"mountain\" | \"snow-mountain\" | \"tree\" | \"forest\" | \"waves\" | \"wind\" | \"tornado\" | \"sun\" | \"moon\" | \"cloud\" | \"rain\" | \"storm\" | \"cloud-sun\" | \"rainbow\" | \"sunrise\" | \"sunset\" | \"snowflake\" | \"thermometer\" | \"droplet\" | \"wheat\" | \"tractor\" | \"pickaxe\" | \"gem\" | \"fuel\" | \"recycle\" | \"atom\" | \"flask\" | \"beaker\" | \"test-tube\" | \"microscope\" | \"telescope\" | \"orbit\" | \"magnet\" | \"lightning\" | \"battery\" | \"flame\" | \"radiation\" | \"biohazard\" | \"gauge\" | \"ruler\" | \"weight\" | \"hourglass\" | \"hexagon\" | \"hammer\" | \"wrench\" | \"leaf\" | \"sprout\" | \"flower\" | \"apple\" | \"egg\" | \"milk\" | \"food\" | \"fish\" | \"bird\" | \"bug\" | \"rabbit\" | \"cat\" | \"dog\" | \"paw\" | \"dna\" | \"brain\" | \"bone\" | \"pulse\" | \"eye\" | \"ear\" | \"hand\" | \"footprints\" | \"activity\" | \"syringe\" | \"pill\" | \"stethoscope\" | \"skull\" | \"siren\" | \"shirt\" | \"crown\" | \"swords\" | \"sword\" | \"shield\" | \"castle\" | \"landmark\" | \"scroll\" | \"feather\" | \"tent\" | \"church\" | \"bomb\" | \"sigma\" | \"infinity\" | \"shapes\" | \"bar-chart\" | \"line-chart\" | \"pie-chart\" }[]",
+        "def": "required",
+        "description": "Events in time order; labels alternate above/below the axis so they never overlap"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the time axis appears"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1600",
+        "description": ""
+      },
+      {
+        "name": "proportional",
+        "type": "boolean",
+        "def": "false",
+        "description": "Place events in proportion to the year (date must be a number); evenly spaced by default"
+      },
+      {
+        "name": "focus",
+        "type": "{ at: number | string; index: integer | null }[]",
+        "def": "[]",
+        "description": "Highlight one event (the others dim); index null to clear"
+      }
+    ]
+  },
+  {
+    "name": "Cycle",
+    "category": "component",
+    "summary": "A cycle: stages (with icons) around a circle, curved arrows from one to the next, a dot travelling around; `active` highlights the stage being discussed.",
+    "useWhen": [
+      "Biology: cell cycle, life cycles, Krebs cycle, nitrogen cycle",
+      "Geography: water cycle, rock cycle",
+      "Economics, society: feedback loops"
+    ],
+    "avoidWhen": [
+      "A process with a start and an end: use Diagram",
+      "More than 8 stages"
+    ],
+    "children": null,
+    "example": "icons-water.tsx",
+    "props": [
+      {
+        "name": "stages",
+        "type": "{ label: string; at: number | string; icon?: \"person\" | \"people\" | \"baby\" | \"student\" | \"book\" | \"pen\" | \"idea\" | \"question\" | \"check\" | \"cross\" | \"warning\" | \"star\" | \"heart\" | \"clock\" | \"calendar\" | \"search\" | \"target\" | \"trophy\" | \"flag\" | \"puzzle\" | \"home\" | \"school\" | \"building\" | \"factory\" | \"hospital\" | \"money\" | \"coins\" | \"cart\" | \"briefcase\" | \"scale\" | \"gavel\" | \"handshake\" | \"vote\" | \"newspaper\" | \"message\" | \"mail\" | \"quote\" | \"languages\" | \"library\" | \"theater\" | \"palette\" | \"brush\" | \"music\" | \"mic\" | \"camera\" | \"film\" | \"volume\" | \"phone\" | \"computer\" | \"code\" | \"database\" | \"cpu\" | \"wifi\" | \"lock\" | \"key\" | \"gear\" | \"cog\" | \"plug\" | \"rocket\" | \"satellite\" | \"calculator\" | \"plane\" | \"ship\" | \"sailboat\" | \"anchor\" | \"car\" | \"train\" | \"bike\" | \"ambulance\" | \"map\" | \"compass\" | \"pin\" | \"route\" | \"signpost\" | \"globe\" | \"earth\" | \"mountain\" | \"snow-mountain\" | \"tree\" | \"forest\" | \"waves\" | \"wind\" | \"tornado\" | \"sun\" | \"moon\" | \"cloud\" | \"rain\" | \"storm\" | \"cloud-sun\" | \"rainbow\" | \"sunrise\" | \"sunset\" | \"snowflake\" | \"thermometer\" | \"droplet\" | \"wheat\" | \"tractor\" | \"pickaxe\" | \"gem\" | \"fuel\" | \"recycle\" | \"atom\" | \"flask\" | \"beaker\" | \"test-tube\" | \"microscope\" | \"telescope\" | \"orbit\" | \"magnet\" | \"lightning\" | \"battery\" | \"flame\" | \"radiation\" | \"biohazard\" | \"gauge\" | \"ruler\" | \"weight\" | \"hourglass\" | \"hexagon\" | \"hammer\" | \"wrench\" | \"leaf\" | \"sprout\" | \"flower\" | \"apple\" | \"egg\" | \"milk\" | \"food\" | \"fish\" | \"bird\" | \"bug\" | \"rabbit\" | \"cat\" | \"dog\" | \"paw\" | \"dna\" | \"brain\" | \"bone\" | \"pulse\" | \"eye\" | \"ear\" | \"hand\" | \"footprints\" | \"activity\" | \"syringe\" | \"pill\" | \"stethoscope\" | \"skull\" | \"siren\" | \"shirt\" | \"crown\" | \"swords\" | \"sword\" | \"shield\" | \"castle\" | \"landmark\" | \"scroll\" | \"feather\" | \"tent\" | \"church\" | \"bomb\" | \"sigma\" | \"infinity\" | \"shapes\" | \"bar-chart\" | \"line-chart\" | \"pie-chart\"; tone?: Color }[]",
+        "def": "required",
+        "description": "Stages clockwise, starting at the top"
+      },
+      {
+        "name": "center",
+        "type": "string",
+        "def": "–",
+        "description": "Text in the middle of the ring (name of the cycle)"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "800",
+        "description": ""
+      },
+      {
+        "name": "active",
+        "type": "{ at: number | string; index: integer | null }[]",
+        "def": "[]",
+        "description": "Highlight the stage being discussed"
+      },
+      {
+        "name": "flow",
+        "type": "boolean",
+        "def": "true",
+        "description": "Once all stages are in, a bright dot travels around the ring"
+      }
+    ]
+  },
+  {
+    "name": "MindMap",
+    "category": "component",
+    "summary": "Mind map: the central idea in the middle, 2–6 branches (one color each, with icon and 2–3 sub-points) growing out on both sides with the narration; `focus` highlights one branch.",
+    "useWhen": [
+      "A topic with many facets: causes / course / results / significance",
+      "Literature: characters, themes and craft of a work",
+      "End-of-lesson review"
+    ],
+    "avoidWhen": [
+      "Directed relations between blocks: use Diagram",
+      "Deep hierarchies: use Tree"
+    ],
+    "children": null,
+    "example": "mindmap-literature.tsx",
+    "props": [
+      {
+        "name": "center",
+        "type": "string",
+        "def": "required",
+        "description": "The central idea"
+      },
+      {
+        "name": "branches",
+        "type": "{ label: string; items?: string[]; at: number | string; tone?: Color; icon?: \"person\" | \"people\" | \"baby\" | \"student\" | \"book\" | \"pen\" | \"idea\" | \"question\" | \"check\" | \"cross\" | \"warning\" | \"star\" | \"heart\" | \"clock\" | \"calendar\" | \"search\" | \"target\" | \"trophy\" | \"flag\" | \"puzzle\" | \"home\" | \"school\" | \"building\" | \"factory\" | \"hospital\" | \"money\" | \"coins\" | \"cart\" | \"briefcase\" | \"scale\" | \"gavel\" | \"handshake\" | \"vote\" | \"newspaper\" | \"message\" | \"mail\" | \"quote\" | \"languages\" | \"library\" | \"theater\" | \"palette\" | \"brush\" | \"music\" | \"mic\" | \"camera\" | \"film\" | \"volume\" | \"phone\" | \"computer\" | \"code\" | \"database\" | \"cpu\" | \"wifi\" | \"lock\" | \"key\" | \"gear\" | \"cog\" | \"plug\" | \"rocket\" | \"satellite\" | \"calculator\" | \"plane\" | \"ship\" | \"sailboat\" | \"anchor\" | \"car\" | \"train\" | \"bike\" | \"ambulance\" | \"map\" | \"compass\" | \"pin\" | \"route\" | \"signpost\" | \"globe\" | \"earth\" | \"mountain\" | \"snow-mountain\" | \"tree\" | \"forest\" | \"waves\" | \"wind\" | \"tornado\" | \"sun\" | \"moon\" | \"cloud\" | \"rain\" | \"storm\" | \"cloud-sun\" | \"rainbow\" | \"sunrise\" | \"sunset\" | \"snowflake\" | \"thermometer\" | \"droplet\" | \"wheat\" | \"tractor\" | \"pickaxe\" | \"gem\" | \"fuel\" | \"recycle\" | \"atom\" | \"flask\" | \"beaker\" | \"test-tube\" | \"microscope\" | \"telescope\" | \"orbit\" | \"magnet\" | \"lightning\" | \"battery\" | \"flame\" | \"radiation\" | \"biohazard\" | \"gauge\" | \"ruler\" | \"weight\" | \"hourglass\" | \"hexagon\" | \"hammer\" | \"wrench\" | \"leaf\" | \"sprout\" | \"flower\" | \"apple\" | \"egg\" | \"milk\" | \"food\" | \"fish\" | \"bird\" | \"bug\" | \"rabbit\" | \"cat\" | \"dog\" | \"paw\" | \"dna\" | \"brain\" | \"bone\" | \"pulse\" | \"eye\" | \"ear\" | \"hand\" | \"footprints\" | \"activity\" | \"syringe\" | \"pill\" | \"stethoscope\" | \"skull\" | \"siren\" | \"shirt\" | \"crown\" | \"swords\" | \"sword\" | \"shield\" | \"castle\" | \"landmark\" | \"scroll\" | \"feather\" | \"tent\" | \"church\" | \"bomb\" | \"sigma\" | \"infinity\" | \"shapes\" | \"bar-chart\" | \"line-chart\" | \"pie-chart\" }[]",
+        "def": "required",
+        "description": "Branches; the first half on the right, the rest on the left"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1600",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "780",
+        "description": ""
+      },
+      {
+        "name": "focus",
+        "type": "{ at: number | string; index: integer | null }[]",
+        "def": "[]",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Passage",
+    "category": "component",
+    "summary": "An excerpt of prose, verse or a source document: it appears, then phrases are highlighted, underlined or circled with the narration, with numbered analysis notes in the right column.",
+    "useWhen": [
+      "Literature: analysing lines of a poem, figures of speech, well-chosen words",
+      "History: quoting a primary source (a declaration, an edict, a proclamation)",
+      "Languages: pointing out grammar structures in a sentence"
+    ],
+    "avoidWhen": [
+      "Passages longer than ~70 words: split across scenes",
+      "A short definition: use Callout"
+    ],
+    "children": null,
+    "example": "passage-poem.tsx",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "def": "required",
+        "description": "Excerpt / lines of verse (line breaks with \\n in a JS string). At most ~70 words"
+      },
+      {
+        "name": "source",
+        "type": "string",
+        "def": "–",
+        "description": "Author and work: \"— Nguyễn Du, The Tale of Kiều\""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "marks",
+        "type": "{ phrase: string; at: number | string; color?: Color; mode?: \"marker\" | \"underline\" | \"circle\" | \"text\"; note?: string }[]",
+        "def": "[]",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "44",
+        "description": ""
+      },
+      {
+        "name": "serif",
+        "type": "boolean",
+        "def": "true",
+        "description": "Serif type (literature); false for informational text"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1000",
+        "description": "Width of the text block (px)"
+      }
+    ]
+  },
+  {
+    "name": "Venn",
+    "category": "component",
+    "summary": "Venn diagram of 2–3 sets: circles draw themselves, regions are shaded by expression (A&B, A|B, A-B, !A) step by step, with counts in each region.",
+    "useWhen": [
+      "Sets: intersection, union, difference, complement",
+      "Probability: intersections and unions of events, the addition rule",
+      "Comparing two concepts: what is unique and what is shared (biology, literature, history)"
+    ],
+    "avoidWhen": [
+      "More than 3 sets",
+      "Comparing on many criteria: use Table"
+    ],
+    "children": null,
+    "example": "venn-sets.tsx",
+    "props": [
+      {
+        "name": "sets",
+        "type": "{ label: string; color?: Color }[]",
+        "def": "required",
+        "description": "2 or 3 sets; in expressions they are A, B, C in order"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "universe",
+        "type": "string",
+        "def": "–",
+        "description": "Label of the universal set (outer rectangle), e.g. \"Class 10A\""
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; shade: string; color?: Color }[]",
+        "def": "[]",
+        "description": "Each step shades one region (replacing the previous one)"
+      },
+      {
+        "name": "values",
+        "type": "{ in: string; text: string; at: number | string }[]",
+        "def": "[]",
+        "description": "A number or text placed in a region: element count, probability, a typical member"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1000",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "680",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "PieChart",
+    "category": "component",
+    "summary": "Pie / donut chart: slices sweep in one by one, legend with percentages, `focus` pulls a slice out.",
+    "useWhen": [
+      "Shares and structure: economic sectors, composition of air, population structure",
+      "Percentages of a whole"
+    ],
+    "avoidWhen": [
+      "Comparing sizes between items or over time: use BarChart / Scatter connect"
+    ],
+    "children": null,
+    "example": "pie-economy.tsx",
+    "props": [
+      {
+        "name": "slices",
+        "type": "{ label: string; value: number; color?: Color }[]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the slices sweep in one after another"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "560",
+        "description": ""
+      },
+      {
+        "name": "donut",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      },
+      {
+        "name": "center",
+        "type": "string",
+        "def": "–",
+        "description": "Text in the middle of the ring (donut)"
+      },
+      {
+        "name": "percent",
+        "type": "boolean",
+        "def": "true",
+        "description": "Show percentages in the legend"
+      },
+      {
+        "name": "focus",
+        "type": "{ at: number | string; index: integer | null }[]",
+        "def": "[]",
+        "description": "Pull a slice out and dim the others"
+      }
+    ]
+  },
+  {
+    "name": "GridViz",
+    "category": "component",
+    "summary": "A 2D grid of cells driven by steps: fill values (cells flip), highlight the cell being computed, arrows from the cells it depends on, highlight rows/columns, mark cells done; `matrix` for a bracketed matrix.",
+    "useWhen": [
+      "Dynamic programming: LCS, knapsack, counting paths (from → focus)",
+      "Matrices: row × column products, Gaussian elimination",
+      "Game boards, Punnett squares (genetics), multiplication tables"
+    ],
+    "avoidWhen": [
+      "Tables of text comparing criteria: use Table",
+      "One-dimensional arrays: use ArrayViz"
+    ],
+    "children": null,
+    "example": "grid-dp.tsx",
+    "props": [
+      {
+        "name": "values",
+        "type": "number | string | null[][]",
+        "def": "required",
+        "description": "Values by row; null = empty cell (filled later with steps.set)"
+      },
+      {
+        "name": "rowLabels",
+        "type": "string[]",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "colLabels",
+        "type": "string[]",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "reveal",
+        "type": "\"all\" | \"rows\" | \"cells\"",
+        "def": "\"all\"",
+        "description": "How the table appears: all at once, row by row, cell by cell"
+      },
+      {
+        "name": "matrix",
+        "type": "boolean",
+        "def": "false",
+        "description": "Matrix style: no cell borders, square brackets on both sides"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1000",
+        "description": ""
+      },
+      {
+        "name": "cell",
+        "type": "number",
+        "def": "–",
+        "description": "Cell size (px); computed from width by default"
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; set?: { r: integer; c: integer; v: number | string }[]; focus?: [integer, integer][]; from?: [integer, integer][]; rows?: integer[]; cols?: integer[]; done?: [integer, integer][]; note?: string }[]",
+        "def": "[]",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "WorldMap",
+    "category": "component",
+    "summary": "World map (country borders at 1:110m): countries light up with the narration, markers by longitude/latitude (pulsing), routes with arrows drawn progressively, `view` flies from one region to another. Draws the Paracel and Spratly archipelagos.",
+    "useWhen": [
+      "History: the extent of an empire, the countries at war, the direction of an advance, the Silk Road",
+      "Geography: where a country is, economic regions, migration flows, sea routes",
+      "Any lesson that needs to say \"where\""
+    ],
+    "avoidWhen": [
+      "Detailed maps of provinces / cities (the data only has country borders)",
+      "A simplified hand-drawn sketch: use Stage + Path"
+    ],
+    "children": null,
+    "example": "map-history.tsx",
+    "props": [
+      {
+        "name": "region",
+        "type": "\"world\" | \"asia\" | \"east-asia\" | \"southeast-asia\" | \"vietnam\" | \"europe\" | \"africa\" | \"middle-east\" | \"north-america\" | \"south-america\" | \"americas\" | \"oceania\" | [number, number, number, number]",
+        "def": "\"world\"",
+        "description": "View: world, asia, east-asia, southeast-asia, vietnam, europe, africa, middle-east, north-america, south-america, americas, oceania; or [min longitude, max longitude, min latitude, max latitude]"
+      },
+      {
+        "name": "view",
+        "type": "{ at: number | string; region: \"world\" | \"asia\" | \"east-asia\" | \"southeast-asia\" | \"vietnam\" | \"europe\" | \"africa\" | \"middle-east\" | \"north-america\" | \"south-america\" | \"americas\" | \"oceania\" | [number, number, number, number] }[]",
+        "def": "[]",
+        "description": "Fly to another region at `at` (world → Southeast Asia → Viet Nam)"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "1500",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "def": "800",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "highlights",
+        "type": "{ countries: string[]; at: number | string; color?: Color; label?: string; outAt?: number | string }[]",
+        "def": "[]",
+        "description": "Color countries with the narration (Natural Earth English names or common Vietnamese names)"
+      },
+      {
+        "name": "markers",
+        "type": "{ at: [number, number]; label?: string; when: number | string; color?: Color; dir?: \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\" }[]",
+        "def": "[]",
+        "description": "Markers (cities, battles); `when` is when they appear"
+      },
+      {
+        "name": "routes",
+        "type": "{ points: [number, number][]; when: number | string; color?: Color; label?: string; duration?: number; dashed?: boolean }[]",
+        "def": "[]",
+        "description": "Routes with an arrow (campaigns, migrations, trade, voyages), drawn progressively"
+      },
+      {
+        "name": "islands",
+        "type": "boolean",
+        "def": "true",
+        "description": "Draw the Paracel and Spratly archipelagos (Viet Nam) when they are in view"
+      },
+      {
+        "name": "transition",
+        "type": "number",
+        "def": "1.8",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Atom",
+    "category": "component",
+    "summary": "Bohr model of an atom: nucleus, electron shells appearing one by one and orbiting; highlight the outer shell; `lose` / `gain` send electrons out / in to make ions.",
+    "useWhen": [
+      "Atomic structure, electron configuration, valence electrons",
+      "Ionic bonding: Na loses 1 electron, Cl gains 1 (two Atoms in a Row + Arrow)"
+    ],
+    "avoidWhen": [
+      "Bonds within a molecule: use Molecule"
+    ],
+    "children": null,
+    "example": "chem-ionic.tsx",
+    "props": [
+      {
+        "name": "symbol",
+        "type": "string",
+        "def": "required",
+        "description": "Nucleus symbol, e.g. \"Na\" or \"11+\""
+      },
+      {
+        "name": "shells",
+        "type": "integer[]",
+        "def": "required",
+        "description": "Electrons per shell from the inside out, e.g. Na: [2, 8, 1]"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the nucleus appears; the electron shells follow one by one"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "560",
+        "description": ""
+      },
+      {
+        "name": "spin",
+        "type": "boolean",
+        "def": "true",
+        "description": "Electrons orbit the nucleus"
+      },
+      {
+        "name": "highlight",
+        "type": "{ at: number | string; shell: integer }[]",
+        "def": "[]",
+        "description": "Highlight a shell (the outer shell / valence electrons)"
+      },
+      {
+        "name": "lose",
+        "type": "{ at: number | string; count?: integer }",
+        "def": "–",
+        "description": "The outer shell loses electrons (they fly away): a positive ion"
+      },
+      {
+        "name": "gain",
+        "type": "{ at: number | string; count?: integer }",
+        "def": "–",
+        "description": "The outer shell gains electrons (they fly in): a negative ion"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Name under the atom, supports $…$"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Molecule",
+    "category": "component",
+    "summary": "A 2D ball-and-stick molecule (colored by element): atoms pop in, single/double/triple bonds draw themselves; `steps` move atoms, break bonds (dashed, then fading) and form new ones: the reaction happens on screen.",
+    "useWhen": [
+      "Molecular structure: H₂O, CO₂, CH₄, C₂H₄",
+      "Reactions: 2H₂ + O₂ → 2H₂O (old bonds break, atoms rearrange, new bonds form)",
+      "Isomers, functional groups (organic chemistry)"
+    ],
+    "avoidWhen": [
+      "Only the equation is needed: use Formula with \\ce{…}",
+      "Molecules with more than ~40 atoms"
+    ],
+    "children": null,
+    "example": "chem-reaction.tsx",
+    "props": [
+      {
+        "name": "atoms",
+        "type": "{ id: string; el: string; x: number; y: number; charge?: string }[]",
+        "def": "required",
+        "description": "Atoms with 2D coordinates (unit = bond length, y up). E.g. H₂O: O(0,0), H(-0.8,-0.6), H(0.8,-0.6)"
+      },
+      {
+        "name": "bonds",
+        "type": "{ a: string; b: string; order?: integer }[]",
+        "def": "[]",
+        "description": "Initial bonds (single, double, triple)"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the molecule appears (atoms pop in, bonds draw after)"
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; move?: object; break?: string[]; form?: { a: string; b: string; order?: integer }[]; highlight?: string[]; note?: string }[]",
+        "def": "[]",
+        "description": "How the reaction unfolds with the narration"
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "def": "120",
+        "description": "Pixels per unit (bond length)"
+      },
+      {
+        "name": "labels",
+        "type": "boolean",
+        "def": "true",
+        "description": "Write the element symbol on each ball"
+      }
+    ]
+  },
+  {
+    "name": "Plot",
+    "category": "plot",
+    "summary": "A curve y = f(x) in Axes: draws itself, parameters change over time (`params`), morphs into another function (`morph`).",
+    "useWhen": [
+      "Function graphs; several functions on the same axes (one color each)",
+      "Showing how a parameter reshapes the graph: a·sin(x) as a grows",
+      "Morphing x² → x³"
+    ],
+    "avoidWhen": [
+      "Parametric curves x(t), y(t): use Parametric"
+    ],
+    "children": null,
+    "example": "axes-calculus.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string | function",
+        "def": "required",
+        "description": "Expression string (\"x^2 - 1\", \"a*sin(x)\") or a JS function ((x) => …)"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": "Parameters in the expression, which can change over time: { a: [{ at: 0, value: 1 }, { at: \"cue:larger\", value: 3 }] }"
+      },
+      {
+        "name": "domain",
+        "type": "[number, number]",
+        "def": "–",
+        "description": "Draw only within this x range"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the curve starts drawing (right after the axes by default)"
+      },
+      {
+        "name": "drawDuration",
+        "type": "number",
+        "def": "1.6",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "5",
+        "description": ""
+      },
+      {
+        "name": "dashed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Curve label, e.g. \"$f(x)=x^2$\""
+      },
+      {
+        "name": "labelX",
+        "type": "number",
+        "def": "–",
+        "description": "x position of the label (near the right end by default)"
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"ur\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "morph",
+        "type": "{ at: number | string; fn: string | function }[]",
+        "def": "[]",
+        "description": "Morph: at `at` the curve bends smoothly into a new function"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the curve fades out"
+      }
+    ]
+  },
+  {
+    "name": "Parametric",
+    "category": "plot",
+    "summary": "A parametric curve (x(t), y(t)) in Axes, traced as if by a moving pen.",
+    "useWhen": [
+      "Circles, ellipses, spirals, Lissajous curves, trajectories",
+      "Curves that are not graphs of functions"
+    ],
+    "avoidWhen": [
+      "y = f(x): use Plot",
+      "A simple circle: use Circle"
+    ],
+    "children": null,
+    "example": null,
+    "props": [
+      {
+        "name": "x",
+        "type": "string | function",
+        "def": "required",
+        "description": "x as a function of t, e.g. \"cos(t)\""
+      },
+      {
+        "name": "y",
+        "type": "string | function",
+        "def": "required",
+        "description": "y as a function of t, e.g. \"sin(t)\""
+      },
+      {
+        "name": "t",
+        "type": "[number, number]",
+        "def": "[0,6.2832]",
+        "description": "Parameter range of t"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "drawDuration",
+        "type": "number",
+        "def": "2",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"warn\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "5",
+        "description": ""
+      },
+      {
+        "name": "fill",
+        "type": "Color",
+        "def": "–",
+        "description": "Fill the inside (closed curves)"
+      },
+      {
+        "name": "samples",
+        "type": "integer",
+        "def": "500",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Point",
+    "category": "plot",
+    "summary": "A point in Axes with a label; `x` can move by keyframes, `on` keeps the point on a curve, `coords` shows live coordinates.",
+    "useWhen": [
+      "Marking points, roots, extrema, intersections",
+      "A point sliding along a graph with the narration",
+      "Vertices in geometry (A, B, C)"
+    ],
+    "avoidWhen": [
+      "More than ~8 points: use one Plot or group them"
+    ],
+    "children": null,
+    "example": "axes-calculus.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "x: a number, keyframes to make the point move, or an expression of time (\"2*cos(time)\")"
+      },
+      {
+        "name": "y",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "–",
+        "description": "y; leave empty when using `on`"
+      },
+      {
+        "name": "on",
+        "type": "string | function",
+        "def": "–",
+        "description": "The point stays on the curve y = on(x): only x needs to move"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "11",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label, e.g. \"$A$\" or \"$(2, 4)$\""
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"ur\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "coords",
+        "type": "boolean",
+        "def": "false",
+        "description": "The label shows the current (x, y), updating as the point moves"
+      },
+      {
+        "name": "guides",
+        "type": "boolean",
+        "def": "false",
+        "description": "Dashed guide lines down to both axes"
+      },
+      {
+        "name": "trail",
+        "type": "number",
+        "def": "0",
+        "description": "Trail: redraws the path the point travelled in the last N seconds (60 = the whole path). Only works when x/y are keyframes or expressions, not numbers computed with useTrack"
+      },
+      {
+        "name": "trailColor",
+        "type": "Color",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      }
+    ]
+  },
+  {
+    "name": "Vector",
+    "category": "plot",
+    "summary": "A vector arrow in Axes, growing from its origin; components can move by keyframes; follows the Axes `matrix` transformation.",
+    "useWhen": [
+      "Vectors, vector addition (put `from` at the tip of the other), forces, velocities",
+      "Linear transformations: vectors follow the matrix"
+    ],
+    "avoidWhen": [
+      "Arrows between blocks: use Arrow or Diagram"
+    ],
+    "children": null,
+    "example": "axes-linear.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "x component: a number, keyframes, or an expression of time"
+      },
+      {
+        "name": "y",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "y component"
+      },
+      {
+        "name": "from",
+        "type": "[number, number]",
+        "def": "[0,0]",
+        "description": "Origin of the vector"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "E.g. \"$\\\\vec v$\""
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "–",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "6",
+        "description": ""
+      },
+      {
+        "name": "components",
+        "type": "boolean",
+        "def": "false",
+        "description": "Show the x, y components as dashed lines"
+      }
+    ]
+  },
+  {
+    "name": "Segment",
+    "category": "plot",
+    "summary": "A segment (or a line with `extend`) between two coordinate points, drawing itself, with a label at its middle.",
+    "useWhen": [
+      "Sides in geometry, altitudes, medians",
+      "Secants through two points, connecting lines, distances"
+    ],
+    "avoidWhen": [
+      "Closed polygons: use Polygon"
+    ],
+    "children": null,
+    "example": "axes-geometry.tsx",
+    "props": [
+      {
+        "name": "from",
+        "type": "[number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "to",
+        "type": "[number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "dashed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "extend",
+        "type": "boolean",
+        "def": "false",
+        "description": "Extend into a full line through the two points"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label at the middle of the segment, e.g. the length \"$c$\""
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"u\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.7",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Polygon",
+    "category": "plot",
+    "summary": "A polygon (triangle, square…) by the coordinates of its vertices: the outline draws itself, then the inside is filled.",
+    "useWhen": [
+      "Geometry: triangles, squares on the sides (Pythagoras), the parallelogram of a determinant"
+    ],
+    "avoidWhen": [
+      "Area under a curve: use AreaUnder"
+    ],
+    "children": null,
+    "example": "axes-geometry.tsx",
+    "props": [
+      {
+        "name": "points",
+        "type": "[number, number][]",
+        "def": "required",
+        "description": "Vertices [[x, y], …]"
+      },
+      {
+        "name": "closed",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "fill",
+        "type": "Color | \"none\"",
+        "def": "\"none\"",
+        "description": "Fill color inside (translucent)"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label at the centroid, e.g. the area \"$S$\""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.2",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Circle",
+    "category": "plot",
+    "summary": "A circle from a center and radius in coordinates, drawn around once; the radius can move by keyframes.",
+    "useWhen": [
+      "The unit circle, circumscribed circles, ε-neighbourhoods"
+    ],
+    "avoidWhen": [
+      "Ellipses or other curves: use Parametric"
+    ],
+    "children": null,
+    "example": "axes-unit-circle.tsx",
+    "props": [
+      {
+        "name": "center",
+        "type": "[number, number]",
+        "def": "[0,0]",
+        "description": ""
+      },
+      {
+        "name": "r",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "Radius (coordinate units), can move by keyframes"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "fill",
+        "type": "Color | \"none\"",
+        "def": "\"none\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "dashed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.2",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Angle",
+    "category": "plot",
+    "summary": "An angle mark at a vertex (a translucent arc, or a small square for a right angle) with a label.",
+    "useWhen": [
+      "Geometry: angles of a triangle, right angles, the rotation angle θ on the unit circle"
+    ],
+    "avoidWhen": [
+      "When there are no two clear sides to mark an angle between"
+    ],
+    "children": null,
+    "example": "axes-geometry.tsx",
+    "props": [
+      {
+        "name": "vertex",
+        "type": "[number, number]",
+        "def": "required",
+        "description": "Vertex of the angle"
+      },
+      {
+        "name": "from",
+        "type": "[number, number]",
+        "def": "required",
+        "description": "A point on the first side"
+      },
+      {
+        "name": "to",
+        "type": "[number, number]",
+        "def": "required",
+        "description": "A point on the second side"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "def": "56",
+        "description": "Arc radius (px)"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"warn\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "E.g. \"$\\\\alpha$\""
+      },
+      {
+        "name": "right",
+        "type": "boolean",
+        "def": "–",
+        "description": "Draw a right-angle mark (detected automatically when the angle ≈ 90°)"
+      }
+    ]
+  },
+  {
+    "name": "AreaUnder",
+    "category": "plot",
+    "summary": "Shades the area under a curve (or between two curves) from `from` to `to`, sweeping from the left; the bounds can move by keyframes.",
+    "useWhen": [
+      "Integrals, areas, probability under a density curve",
+      "A moving upper bound to illustrate the accumulation function"
+    ],
+    "avoidWhen": [
+      "Approximation by rectangles: use Riemann"
+    ],
+    "children": null,
+    "example": "axes-calculus.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string | function",
+        "def": "required",
+        "description": "Expression string (\"x^2 - 1\", \"a*sin(x)\") or a JS function ((x) => …)"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "from",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "Lower bound (can move)"
+      },
+      {
+        "name": "to",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "Upper bound (can move)"
+      },
+      {
+        "name": "lower",
+        "type": "string | function",
+        "def": "–",
+        "description": "Lower curve (area between two curves); the x axis by default"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the shading sweeps from left to right"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "def": "0.3",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label in the middle of the region, e.g. \"$S$\""
+      }
+    ]
+  },
+  {
+    "name": "Riemann",
+    "category": "plot",
+    "summary": "Riemann sum: rectangles under the curve grow from the axis; `n` keyframes refine them so the sum visibly approaches the area.",
+    "useWhen": [
+      "Definition of the integral, approximating areas, limits as n → ∞"
+    ],
+    "avoidWhen": [
+      "Just shading an area: use AreaUnder"
+    ],
+    "children": null,
+    "example": "axes-riemann.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string | function",
+        "def": "required",
+        "description": "Expression string (\"x^2 - 1\", \"a*sin(x)\") or a JS function ((x) => …)"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "from",
+        "type": "number",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "to",
+        "type": "number",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "n",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "Number of rectangles; keyframes to refine: [{ at: 0, value: 4 }, { at: \"cue:more\", value: 16 }]"
+      },
+      {
+        "name": "rule",
+        "type": "\"left\" | \"right\" | \"mid\"",
+        "def": "\"left\"",
+        "description": "Take the height at the left edge, the right edge or the middle"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "def": "0.45",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Tangent",
+    "category": "plot",
+    "summary": "The tangent to a curve at x (x can slide by keyframes), with a live slope label.",
+    "useWhen": [
+      "Derivatives, instantaneous slope, extrema (horizontal tangent)",
+      "Sliding the tangent along the curve while the slope changes"
+    ],
+    "avoidWhen": [
+      "A secant through two points: use Segment extend"
+    ],
+    "children": null,
+    "example": "axes-calculus.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string | function",
+        "def": "required",
+        "description": "Expression string (\"x^2 - 1\", \"a*sin(x)\") or a JS function ((x) => …)"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "x of the point of tangency; keyframes make the tangent slide along the curve"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "def": "440",
+        "description": "Length of the tangent segment (px)"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"warn\"",
+        "description": ""
+      },
+      {
+        "name": "slope",
+        "type": "boolean",
+        "def": "false",
+        "description": "Show a slope label next to the point, updating continuously"
+      },
+      {
+        "name": "slopeLabel",
+        "type": "string",
+        "def": "\"f'(x)\"",
+        "description": "Name of the slope in the label (TeX)"
+      }
+    ]
+  },
+  {
+    "name": "VectorField",
+    "category": "plot",
+    "summary": "A vector field (fx, fy) in Axes: a grid of arrows growing out from the center, length/brightness by magnitude; `particles` release particles that drift with the flow.",
+    "useWhen": [
+      "Differential equations, force fields, flows, gradients, div/curl"
+    ],
+    "avoidWhen": [
+      "Just a few separate vectors: use Vector"
+    ],
+    "children": null,
+    "example": "axes-field.tsx",
+    "props": [
+      {
+        "name": "fx",
+        "type": "string | function",
+        "def": "required",
+        "description": "x component of the field, in x, y. E.g. \"-y\""
+      },
+      {
+        "name": "fy",
+        "type": "string | function",
+        "def": "required",
+        "description": "y component, e.g. \"x\""
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "def": "–",
+        "description": "Spacing between arrows (coordinate units); chosen automatically by default"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "particles",
+        "type": "number | string",
+        "def": "–",
+        "description": "From this moment, release particles that drift with the field (flow)"
+      },
+      {
+        "name": "count",
+        "type": "integer",
+        "def": "120",
+        "description": "Number of particles"
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "def": "1",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Label",
+    "category": "plot",
+    "summary": "Text or a formula placed at a coordinate in Axes (follows zoom and transformations).",
+    "useWhen": [
+      "A note next to part of the picture: \"$S = \\pi r^2$\", \"increasing\", \"decreasing\""
+    ],
+    "avoidWhen": [
+      "Labels of points, vectors, segments: use their label prop",
+      "A large formula outside the picture: use Formula"
+    ],
+    "children": null,
+    "example": null,
+    "props": [
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "A fixed number, or keyframes [{ at: 0, value: 1 }, { at: \"cue:…\", value: 3 }]: the first key is the starting value, each later key moves smoothly to its value"
+      },
+      {
+        "name": "y",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "A fixed number, or keyframes [{ at: 0, value: 1 }, { at: \"cue:…\", value: 3 }]: the first key is the starting value, each later key moves smoothly to its value"
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "def": "required",
+        "description": "Text, supports $…$"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "36",
+        "description": ""
+      },
+      {
+        "name": "dir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"c\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      }
+    ]
+  },
+  {
+    "name": "Group",
+    "category": "plot",
+    "summary": "Groups coordinate objects, then shifts / rotates / scales the whole group by keyframes or by `time`: a sliding body, a rotating triangle, a swinging pendulum, a rolling wheel.",
+    "useWhen": [
+      "Geometric transformations: translating, rotating, scaling a shape",
+      "Physics: a block sliding down a slope, a pendulum (rotate=\"25*sin(3*time)\"), steady rotation",
+      "Moving a cluster (shape + label) together"
+    ],
+    "avoidWhen": [
+      "Transforming the whole plane: use the Axes matrix / warp"
+    ],
+    "children": "Coordinate objects (Polygon, Segment, Circle, Point, Label, Path, Spring…)",
+    "example": "stage-physics.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "0",
+        "description": "Horizontal shift (coordinate units)"
+      },
+      {
+        "name": "y",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "0",
+        "description": "Vertical shift"
+      },
+      {
+        "name": "rotate",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "0",
+        "description": "Rotation (degrees, counterclockwise) around `about`; \"90*time\" spins steadily"
+      },
+      {
+        "name": "scale",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "1",
+        "description": "Scale up / down around `about`"
+      },
+      {
+        "name": "about",
+        "type": "[number, number]",
+        "def": "[0,0]",
+        "description": "Center of rotation / scaling"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the whole group appears (children still follow their own `at`)"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the whole group fades out"
+      }
+    ]
+  },
+  {
+    "name": "Secant",
+    "category": "plot",
+    "summary": "A secant through two points of a curve, with its Δx, Δy triangle and a live slope label; let x2 move to x1 to watch the secant become the tangent.",
+    "useWhen": [
+      "Definition of the derivative: Δx → 0",
+      "Average rate of change over an interval",
+      "Slope of the line through two points"
+    ],
+    "avoidWhen": [
+      "Just the tangent: use Tangent"
+    ],
+    "children": null,
+    "example": "axes-derivative.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string | function",
+        "def": "required",
+        "description": "Expression string (\"x^2 - 1\", \"a*sin(x)\") or a JS function ((x) => …)"
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "x1",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "x of the first point"
+      },
+      {
+        "name": "x2",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "x of the second point; keyframes bring it close to x1 (Δx → 0) so the secant becomes the tangent"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"warn\"",
+        "description": ""
+      },
+      {
+        "name": "riseRun",
+        "type": "boolean",
+        "def": "true",
+        "description": "Draw the Δx (horizontal) and Δy (vertical) sides of the slope triangle"
+      },
+      {
+        "name": "dxLabel",
+        "type": "string",
+        "def": "\"$\\\\Delta x$\"",
+        "description": ""
+      },
+      {
+        "name": "dyLabel",
+        "type": "string",
+        "def": "\"$\\\\Delta y$\"",
+        "description": ""
+      },
+      {
+        "name": "slope",
+        "type": "boolean",
+        "def": "false",
+        "description": "Live Δy/Δx slope label, updating as the point moves"
+      },
+      {
+        "name": "extend",
+        "type": "boolean",
+        "def": "true",
+        "description": "Extend into a full line through the two points"
+      }
+    ]
+  },
+  {
+    "name": "Region",
+    "category": "plot",
+    "summary": "A translucent band or rectangle in coordinates (x ∈ [a, b], y ∈ [c, d]); its ends can shrink by keyframes.",
+    "useWhen": [
+      "ε–δ limits: the ε band shrinks",
+      "Solution regions of inequalities, confidence intervals",
+      "Box-shaped things on a Stage (blocks, walls, ground, water)"
+    ],
+    "avoidWhen": [
+      "Area under a curve: use AreaUnder"
+    ],
+    "children": null,
+    "example": "stage-physics.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "[number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[], number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]]",
+        "def": "–",
+        "description": "x range [a, b] (each end can move by keyframes); empty = the full width"
+      },
+      {
+        "name": "y",
+        "type": "[number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[], number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]]",
+        "def": "–",
+        "description": "y range [c, d]; empty = the full height"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "def": "0.18",
+        "description": ""
+      },
+      {
+        "name": "border",
+        "type": "boolean",
+        "def": "true",
+        "description": "Dashed outline"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"c\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      }
+    ]
+  },
+  {
+    "name": "BraceBetween",
+    "category": "plot",
+    "summary": "A curly brace between two coordinate points, with a label: a side length, Δx, \"n units\".",
+    "useWhen": [
+      "Marking the length of a side or a segment in a figure",
+      "Pointing out Δx, a height h, a radius, a wavelength λ"
+    ],
+    "avoidWhen": [
+      "A brace under an HTML block (formula, array): use Brace"
+    ],
+    "children": null,
+    "example": "panels-problem.tsx",
+    "props": [
+      {
+        "name": "from",
+        "type": "[number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "to",
+        "type": "[number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "flip",
+        "type": "boolean",
+        "def": "false",
+        "description": "Flip the side of the brace (default: to the right going from from to to, i.e. below when going left to right)"
+      },
+      {
+        "name": "offset",
+        "type": "number",
+        "def": "12",
+        "description": "Distance from the segment to the brace (px)"
+      }
+    ]
+  },
+  {
+    "name": "Scatter",
+    "category": "plot",
+    "summary": "Data as points in Axes: points appear in turn, `connect` makes a line chart, `fit` draws the regression line.",
+    "useWhen": [
+      "Real data: temperature by month, population by year, experimental results",
+      "Correlation, linear regression",
+      "Several data series to compare (one Scatter per series, one color each)"
+    ],
+    "avoidWhen": [
+      "A function with a formula: use Plot",
+      "Comparing a few separate numbers: use BarChart"
+    ],
+    "children": null,
+    "example": "chart-climate.tsx",
+    "props": [
+      {
+        "name": "points",
+        "type": "[number, number][]",
+        "def": "required",
+        "description": "Data points [[x, y], …]"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "over",
+        "type": "number",
+        "def": "1.2",
+        "description": "Points appear one after another over this many seconds"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "9",
+        "description": ""
+      },
+      {
+        "name": "connect",
+        "type": "boolean",
+        "def": "false",
+        "description": "Connect the points into a line (line chart: temperature by month, population by year)"
+      },
+      {
+        "name": "fit",
+        "type": "number | string",
+        "def": "–",
+        "description": "When to draw the linear regression line (line of best fit)"
+      },
+      {
+        "name": "fitColor",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label of the data series, placed next to the last point"
+      }
+    ]
+  },
+  {
+    "name": "Epicycles",
+    "category": "plot",
+    "summary": "A chain of rotating circles (a Fourier series) drawing a shape; `show` adds circles one by one so the approximation improves.",
+    "useWhen": [
+      "Fourier series, a square wave as a sum of sines",
+      "Combined circular motions"
+    ],
+    "avoidWhen": [
+      "A single circular motion: use Point with x=\"cos(time)\""
+    ],
+    "children": null,
+    "example": "axes-fourier.tsx",
+    "props": [
+      {
+        "name": "terms",
+        "type": "{ freq: number; r: number; phase?: number }[]",
+        "def": "required",
+        "description": "Circles chained tip to tail (Fourier series)"
+      },
+      {
+        "name": "center",
+        "type": "[number, number]",
+        "def": "[0,0]",
+        "description": ""
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "def": "0.15",
+        "description": "Base turns per second"
+      },
+      {
+        "name": "show",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "–",
+        "description": "Number of circles in use; keyframes add terms one by one so the shape gets closer"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "trail",
+        "type": "number",
+        "def": "60",
+        "description": "Trail length (seconds)"
+      }
+    ]
+  },
+  {
+    "name": "Path",
+    "category": "plot",
+    "summary": "A smooth (or straight-segment) path through coordinate points, drawing itself; arrowhead at the end, a dot travelling along it, closed and filled.",
+    "useWhen": [
+      "Free drawing on a Stage: coastlines, rivers, orbits, light rays, army routes, ocean currents",
+      "Closed hand-drawn shapes: a leaf, a cell, a lake (closed + fill)",
+      "Curved arrows showing movement or flow (arrow, flow)"
+    ],
+    "avoidWhen": [
+      "Graphs y = f(x): use Plot",
+      "Straight-sided polygons: use Polygon"
+    ],
+    "children": null,
+    "example": "stage-biology.tsx",
+    "props": [
+      {
+        "name": "points",
+        "type": "[number, number][]",
+        "def": "required",
+        "description": "Points [[x, y], …] in coordinates"
+      },
+      {
+        "name": "smooth",
+        "type": "boolean",
+        "def": "true",
+        "description": "A smooth curve through the points (false: straight segments)"
+      },
+      {
+        "name": "closed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.2",
+        "description": "Time to draw"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "fill",
+        "type": "Color | \"none\"",
+        "def": "\"none\"",
+        "description": ""
+      },
+      {
+        "name": "fillOpacity",
+        "type": "number",
+        "def": "0.22",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "dashed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "arrow",
+        "type": "boolean",
+        "def": "false",
+        "description": "Arrowhead at the end (movement, flow, wind direction)"
+      },
+      {
+        "name": "flow",
+        "type": "boolean",
+        "def": "false",
+        "description": "A bright dot travelling along the path continuously once drawn"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "labelAt",
+        "type": "number",
+        "def": "0.5",
+        "description": "Label position along the path (0 start, 1 end)"
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"u\"",
+        "description": "Label direction relative to the point: u d l r ur ul dr dl, c = centered"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      }
+    ]
+  },
+  {
+    "name": "Spring",
+    "category": "plot",
+    "summary": "A zigzag spring between two points, stretching and compressing as one end moves (expressions of time).",
+    "useWhen": [
+      "Spring oscillators, Hooke's law",
+      "Elastic links between two bodies"
+    ],
+    "avoidWhen": [
+      "A straight string: use Segment"
+    ],
+    "children": null,
+    "example": "stage-physics.tsx",
+    "props": [
+      {
+        "name": "from",
+        "type": "[number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string, number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string]",
+        "def": "required",
+        "description": "Fixed end [x, y]; each coordinate can be a number, keyframes or an expression of time"
+      },
+      {
+        "name": "to",
+        "type": "[number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string, number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string]",
+        "def": "required",
+        "description": "End attached to the body, e.g. [\"2 + 0.8*sin(3*time)\", 0] for an oscillation"
+      },
+      {
+        "name": "coils",
+        "type": "integer",
+        "def": "10",
+        "description": ""
+      },
+      {
+        "name": "thickness",
+        "type": "number",
+        "def": "0.35",
+        "description": "Width of the spring (coordinate units)"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"muted\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Surface",
+    "category": "plot",
+    "summary": "A surface z = f(x, y) in Axes3D, colored by height and shaded; rises out of the floor; params move by keyframes, `morph` turns it into another function.",
+    "useWhen": [
+      "Functions of two variables, partial derivatives, extrema, saddle points",
+      "Waves in two dimensions (with time), the 2D normal distribution"
+    ],
+    "avoidWhen": [
+      "Functions of one variable: use Plot in Axes"
+    ],
+    "children": null,
+    "example": "three-surface.tsx",
+    "props": [
+      {
+        "name": "fn",
+        "type": "string",
+        "def": "required",
+        "description": "Expression in x, y (and params, time): \"x^2 - y^2\", \"sin(x)*cos(y)\""
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "x",
+        "type": "[number, number]",
+        "def": "–",
+        "description": "x domain (the Axes3D x range by default)"
+      },
+      {
+        "name": "y",
+        "type": "[number, number]",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "resolution",
+        "type": "integer",
+        "def": "26",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "When the surface rises out of the plane z = 0"
+      },
+      {
+        "name": "low",
+        "type": "Color",
+        "def": "\"info\"",
+        "description": "Color of low parts"
+      },
+      {
+        "name": "high",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": "Color of high parts"
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "def": "0.88",
+        "description": ""
+      },
+      {
+        "name": "wire",
+        "type": "boolean",
+        "def": "true",
+        "description": "Draw a mesh on the surface"
+      },
+      {
+        "name": "morph",
+        "type": "{ at: number | string; fn: string }[]",
+        "def": "[]",
+        "description": "Morph into another function at `at`"
+      }
+    ]
+  },
+  {
+    "name": "Curve3D",
+    "category": "plot",
+    "summary": "A parametric curve (x(t), y(t), z(t)) in Axes3D, traced as if by a moving pen.",
+    "useWhen": [
+      "Helices, trajectories in space, lines of intersection"
+    ],
+    "avoidWhen": [
+      "Straight lines: use Segment3D"
+    ],
+    "children": null,
+    "example": "three-surface.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "string",
+        "def": "required",
+        "description": "x theo t"
+      },
+      {
+        "name": "y",
+        "type": "string",
+        "def": "required",
+        "description": "y theo t"
+      },
+      {
+        "name": "z",
+        "type": "string",
+        "def": "required",
+        "description": "z theo t"
+      },
+      {
+        "name": "t",
+        "type": "[number, number]",
+        "def": "[0,6.2832]",
+        "description": ""
+      },
+      {
+        "name": "params",
+        "type": "object",
+        "def": "{}",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "drawDuration",
+        "type": "number",
+        "def": "2",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"warn\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "5",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Point3D",
+    "category": "plot",
+    "summary": "A labelled point in Axes3D; coordinates can move by keyframes or with time; `drop` draws a line down to the floor.",
+    "useWhen": [
+      "Marking points on a surface, extrema, positions of objects"
+    ],
+    "avoidWhen": [
+      "Vertices of a pyramid/prism: Solid draws and labels them itself"
+    ],
+    "children": null,
+    "example": "three-surface.tsx",
+    "props": [
+      {
+        "name": "x",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "A number, keyframes, or an expression of time, in seconds since the Axes3D appeared (\"2*cos(time)\")"
+      },
+      {
+        "name": "y",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "A number, keyframes, or an expression of time, in seconds since the Axes3D appeared (\"2*cos(time)\")"
+      },
+      {
+        "name": "z",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string",
+        "def": "required",
+        "description": "A number, keyframes, or an expression of time, in seconds since the Axes3D appeared (\"2*cos(time)\")"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "10",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "labelDir",
+        "type": "\"c\" | \"u\" | \"d\" | \"l\" | \"r\" | \"ur\" | \"ul\" | \"dr\" | \"dl\"",
+        "def": "\"ur\"",
+        "description": ""
+      },
+      {
+        "name": "drop",
+        "type": "boolean",
+        "def": "false",
+        "description": "A dashed line straight down to the plane z = 0 (shows the height)"
+      }
+    ]
+  },
+  {
+    "name": "Vector3D",
+    "category": "plot",
+    "summary": "A vector arrow in Axes3D, growing from `from`; components can move.",
+    "useWhen": [
+      "Vectors in space, cross products, normals, gradients"
+    ],
+    "avoidWhen": [
+      "Vectors in the plane: use Vector in Axes"
+    ],
+    "children": null,
+    "example": "three-surface.tsx",
+    "props": [
+      {
+        "name": "to",
+        "type": "[number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string, number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string, number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[] | string]",
+        "def": "required",
+        "description": "Components [x, y, z]"
+      },
+      {
+        "name": "from",
+        "type": "[number, number, number]",
+        "def": "[0,0,0]",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "6",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Segment3D",
+    "category": "plot",
+    "summary": "A segment between two points in Axes3D, drawing itself.",
+    "useWhen": [
+      "Connecting lines, projections, distances in space (outside a Solid)"
+    ],
+    "avoidWhen": [
+      "Edges of a polyhedron: declare them in Solid so hidden ones are dashed"
+    ],
+    "children": null,
+    "example": null,
+    "props": [
+      {
+        "name": "from",
+        "type": "[number, number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "to",
+        "type": "[number, number, number]",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "dashed",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Solid",
+    "category": "plot",
+    "summary": "A polyhedron for solid geometry: declare named point coordinates and a list of edges; edges appear one by one, point names sit outside the shape, hidden segments are DASHED AUTOMATICALLY and update with the camera; tint side faces / cross-sections with `faces`.",
+    "useWhen": [
+      "Pyramid S.ABCD, tetrahedra, prisms, boxes, cubes",
+      "Altitude SH, lines of intersection, cross-sections, the angle between a line and a plane"
+    ],
+    "avoidWhen": [
+      "Solids of revolution, curved surfaces: use Surface / Curve3D"
+    ],
+    "children": null,
+    "example": "three-pyramid.tsx",
+    "props": [
+      {
+        "name": "points",
+        "type": "object",
+        "def": "required",
+        "description": "Named points: { S: [0, 0, 3], A: [-1, -1, 0], … }; helper points can be added (midpoint M, center O, foot of the altitude H)"
+      },
+      {
+        "name": "edges",
+        "type": "string | { e: string; at?: number | string; color?: Color; width?: number }[]",
+        "def": "required",
+        "description": "Edges/segments to draw: \"SA\", \"AB\", \"SO\" (multi-character names use a dash: \"A'-B'\"). Segments behind or inside the solid are DASHED automatically"
+      },
+      {
+        "name": "faces",
+        "type": "{ p: string; at?: number | string; color?: Color; outAt?: number | string }[]",
+        "def": "[]",
+        "description": "Faces/cross-sections tinted (side face SAB, a cross-section, the plane (SBD))"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "–",
+        "description": "When drawing starts; edges appear one by one"
+      },
+      {
+        "name": "stagger",
+        "type": "number",
+        "def": "0.18",
+        "description": "Delay between edges while drawing (seconds)"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "labels",
+        "type": "boolean",
+        "def": "true",
+        "description": "Write the point names"
+      },
+      {
+        "name": "hidden",
+        "type": "boolean",
+        "def": "true",
+        "description": "Dash hidden segments automatically (for the current camera angle)"
+      }
+    ]
+  },
+  {
+    "name": "Stack",
+    "category": "primitive",
+    "summary": "Stacks its children vertically, `gap` apart. The way to put several elements in one area.",
+    "useWhen": [
+      "An area with 2–3 stacked elements: formula above, graph below; array above, note below"
+    ],
+    "avoidWhen": [
+      "Side by side: use Row",
+      "Two halves of the screen: use the TwoColumn layout"
+    ],
+    "children": "Elements stacked vertically",
+    "example": null,
+    "props": [
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "32",
+        "description": "Space between elements (px)"
+      },
+      {
+        "name": "align",
+        "type": "\"start\" | \"center\" | \"end\" | \"stretch\"",
+        "def": "\"center\"",
+        "description": "Horizontal alignment of the elements"
+      }
+    ]
+  },
+  {
+    "name": "Row",
+    "category": "primitive",
+    "summary": "Lays its children out in a horizontal row, `gap` apart.",
+    "useWhen": [
+      "2–4 small elements side by side: label + formula, status boxes"
+    ],
+    "avoidWhen": [
+      "Two halves of the screen with a scene title: use TwoColumn",
+      "Comparing options: use Cards"
+    ],
+    "children": "Elements laid out horizontally",
+    "example": null,
+    "props": [
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "48",
+        "description": ""
+      },
+      {
+        "name": "align",
+        "type": "\"start\" | \"center\" | \"end\" | \"stretch\"",
+        "def": "\"center\"",
+        "description": "Vertical alignment of the elements"
+      },
+      {
+        "name": "justify",
+        "type": "\"start\" | \"center\" | \"end\" | \"between\"",
+        "def": "\"center\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Switch",
+    "category": "primitive",
+    "summary": "Shows its children one at a time IN THE SAME PLACE, each replacing the previous one. Takes the space of the largest child.",
+    "useWhen": [
+      "Replacing content with the narration: note for step 1 → step 2, formula before → after",
+      "Instead of several stacked FadeIn with outAt: those keep taking space even when faded"
+    ],
+    "avoidWhen": [
+      "Elements that must show together: use Stack or Stagger"
+    ],
+    "children": "Elements replacing each other, as many as the entries in `at`",
+    "example": "code-steps.tsx",
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string[]",
+        "def": "required",
+        "description": "When each child appears, in order: child k shows from at[k] and replaces the previous one"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.45",
+        "description": "Transition time (seconds)"
+      },
+      {
+        "name": "effect",
+        "type": "\"fade\" | \"up\" | \"left\" | \"flip\" | \"zoom\"",
+        "def": "\"up\"",
+        "description": "Transition: up (old content drifts up, new rises in), left slides sideways, flip, zoom, fade"
+      }
+    ]
+  },
+  {
+    "name": "Panels",
+    "category": "primitive",
+    "summary": "A grid of 2–4 panels with small titles, each a view of the same problem (figure, graph, table, working); panels appear in turn, `focus` highlights the one being discussed.",
+    "useWhen": [
+      "Complex problems that need several representations at once: figure + graph + working",
+      "Comparing 3–4 cases (a > 0, a = 0, a < 0)"
+    ],
+    "avoidWhen": [
+      "Just a left and a right part under a scene title: use TwoColumn",
+      "A single illustration: Panels are not needed"
+    ],
+    "children": "2–4 elements, one panel each (keep each panel compact: Axes ≤ 760 × 460)",
+    "example": "panels-problem.tsx",
+    "props": [
+      {
+        "name": "columns",
+        "type": "integer",
+        "def": "2",
+        "description": "Number of columns; children wrap when a row is full (2 columns × 2 rows for 4 panels)"
+      },
+      {
+        "name": "titles",
+        "type": "string[]",
+        "def": "–",
+        "description": "Small title of each panel, supports $…$"
+      },
+      {
+        "name": "at",
+        "type": "number | string[]",
+        "def": "–",
+        "description": "When each panel appears (all at once by default)"
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "48",
+        "description": ""
+      },
+      {
+        "name": "frame",
+        "type": "boolean",
+        "def": "true",
+        "description": "Border and light background for each panel"
+      },
+      {
+        "name": "focus",
+        "type": "{ at: number | string; index: integer | null }[]",
+        "def": "[]",
+        "description": "Highlight one panel (the others dim)"
+      }
+    ]
+  },
+  {
+    "name": "Pulse",
+    "category": "primitive",
+    "summary": "Brief emphasis on its children at one or more moments: swell, glow, ring, shake, bounce.",
+    "useWhen": [
+      "The narration says \"note that\", \"important\", \"this is exactly\"",
+      "Marking a result just computed",
+      "shake when talking about a mistake"
+    ],
+    "avoidWhen": [
+      "Emphasis all through the scene: keep it for key moments"
+    ],
+    "children": "Element to emphasise",
+    "example": "motion.tsx",
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string | number | string[]",
+        "def": "required",
+        "description": "One or more moments of emphasis, e.g. [\"cue:note that\", \"cue:important\"]"
+      },
+      {
+        "name": "mode",
+        "type": "\"scale\" | \"glow\" | \"ring\" | \"shake\" | \"bounce\"",
+        "def": "\"scale\"",
+        "description": "scale swells slightly, glow shines, ring spreads a ring, shake shakes (error/wrong), bounce jumps"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "def": "1",
+        "description": ""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.7",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Camera",
+    "category": "primitive",
+    "summary": "Virtual camera: zooms into an area of its child (e.g. part of an array, a branch of a tree) and back out, with smooth motion.",
+    "useWhen": [
+      "The narration moves attention to a detail: \"look at the left half\", \"consider this subarray\"",
+      "Opening on a close-up, then pulling back to the whole picture"
+    ],
+    "avoidWhen": [
+      "Zooming constantly for no reason",
+      "Wrapping the whole layout: wrap only the illustration inside it"
+    ],
+    "children": "One illustration element",
+    "example": "camera-split.tsx",
+    "props": [
+      {
+        "name": "keys",
+        "type": "{ at: number | string; zoom?: number; x?: number; y?: number }[]",
+        "def": "required",
+        "description": "Camera keys: zoom into an area, then back out"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.1",
+        "description": ""
+      },
+      {
+        "name": "room",
+        "type": "number",
+        "def": "140",
+        "description": "Space (px) above and below the child so zooming does not crop it"
+      }
+    ]
+  },
+  {
+    "name": "Animate",
+    "category": "primitive",
+    "summary": "Moves, scales, rotates or fades its children through keyframes, relative to where the layout placed them.",
+    "useWhen": [
+      "An element moving aside / shrinking to make room for what comes next",
+      "Objects moving with a purpose: rolling, sliding, falling"
+    ],
+    "avoidWhen": [
+      "Just appearing: use FadeIn with an effect",
+      "Initial placement: use Stack/Row, never Animate to lay out a page"
+    ],
+    "children": "Element to move",
+    "example": "motion.tsx",
+    "props": [
+      {
+        "name": "keys",
+        "type": "{ at: number | string; x?: number; y?: number; scale?: number; rotate?: number; opacity?: number }[]",
+        "def": "required",
+        "description": "States over time; moves smoothly between keys. Properties not given keep their previous value"
+      },
+      {
+        "name": "from",
+        "type": "{ x?: number; y?: number; scale?: number; rotate?: number; opacity?: number }",
+        "def": "{}",
+        "description": "State before the first key"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.7",
+        "description": "Transition time between two states"
+      },
+      {
+        "name": "spring",
+        "type": "boolean",
+        "def": "false",
+        "description": "Transition with a slight bounce"
+      }
+    ]
+  },
+  {
+    "name": "Counter",
+    "category": "primitive",
+    "summary": "A number that counts up to its target, and can keep counting to new values with the narration.",
+    "useWhen": [
+      "Numbers of comparisons, running times, results of a calculation",
+      "Showing a number shoot up: 10 000 → 1 000 000"
+    ],
+    "avoidWhen": [
+      "A static number: use plain text"
+    ],
+    "children": null,
+    "example": "motion.tsx",
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "def": "required",
+        "description": "Target value"
+      },
+      {
+        "name": "from",
+        "type": "number",
+        "def": "0",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When counting starts"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1.4",
+        "description": ""
+      },
+      {
+        "name": "steps",
+        "type": "{ at: number | string; value: number }[]",
+        "def": "[]",
+        "description": "Keep counting to new values at later times"
+      },
+      {
+        "name": "decimals",
+        "type": "integer",
+        "def": "0",
+        "description": ""
+      },
+      {
+        "name": "prefix",
+        "type": "string",
+        "def": "\"\"",
+        "description": ""
+      },
+      {
+        "name": "suffix",
+        "type": "string",
+        "def": "\"\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Small label above the number"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "96",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Arrow",
+    "category": "primitive",
+    "summary": "An arrow that draws itself (with a label, optionally a dot flowing along it), placed between elements in a Row/Stack.",
+    "useWhen": [
+      "Transformations A → B: input → result, before → after",
+      "A short chain of steps in one row"
+    ],
+    "avoidWhen": [
+      "Diagrams with many nodes and edges: use Diagram"
+    ],
+    "children": null,
+    "example": "motion.tsx",
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "direction",
+        "type": "\"right\" | \"left\" | \"down\" | \"up\"",
+        "def": "\"right\"",
+        "description": ""
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "def": "140",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label on the arrow, supports $…$"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"muted\"",
+        "description": ""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.6",
+        "description": ""
+      },
+      {
+        "name": "flow",
+        "type": "boolean",
+        "def": "false",
+        "description": "A bright dot travelling along the arrow continuously once drawn (flow)"
+      }
+    ]
+  },
+  {
+    "name": "FadeIn",
+    "category": "primitive",
+    "summary": "Makes a block of content appear at a given time with an effect (slide, pop, zoom, blur, wipe, flip).",
+    "useWhen": [
+      "Custom content that must appear exactly when the narration mentions it",
+      "Wrapping an element that has no `at` prop of its own"
+    ],
+    "avoidWhen": [
+      "Components that already have their own `at` (TitleCard, Formula, Graph…)"
+    ],
+    "children": "Content to show",
+    "example": null,
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "def": "0",
+        "description": "Extra delay (seconds) after `at`"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.6",
+        "description": "Time to appear (seconds)"
+      },
+      {
+        "name": "y",
+        "type": "number",
+        "def": "24",
+        "description": "How many px it slides up from"
+      },
+      {
+        "name": "x",
+        "type": "number",
+        "def": "0",
+        "description": "How many px it slides sideways"
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "def": "1",
+        "description": "Starting scale, e.g. 0.94"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "When it disappears (optional)"
+      },
+      {
+        "name": "effect",
+        "type": "\"up\" | \"down\" | \"left\" | \"right\" | \"fade\" | \"pop\" | \"zoom\" | \"blur\" | \"wipe\" | \"flip\"",
+        "def": "\"up\"",
+        "description": "Entrance: up/down/left/right slide in, pop bounces in, zoom grows from small, blur comes into focus, wipe sweeps from the left, flip flips in, fade only fades"
+      }
+    ]
+  },
+  {
+    "name": "Stagger",
+    "category": "primitive",
+    "summary": "Makes its children appear one after another, `gap` seconds apart.",
+    "useWhen": [
+      "A group of custom elements appearing in sequence"
+    ],
+    "avoidWhen": [
+      "Bullet lists: use BulletReveal"
+    ],
+    "children": "Elements appearing in turn",
+    "example": null,
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "def": "0.35",
+        "description": "Delay between children (seconds)"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.6",
+        "description": ""
+      },
+      {
+        "name": "y",
+        "type": "number",
+        "def": "24",
+        "description": ""
+      },
+      {
+        "name": "effect",
+        "type": "\"up\" | \"down\" | \"left\" | \"right\" | \"fade\" | \"pop\" | \"zoom\" | \"blur\" | \"wipe\" | \"flip\"",
+        "def": "\"up\"",
+        "description": "Entrance: up/down/left/right slide in, pop bounces in, zoom grows from small, blur comes into focus, wipe sweeps from the left, flip flips in, fade only fades"
+      }
+    ]
+  },
+  {
+    "name": "Typewriter",
+    "category": "primitive",
+    "summary": "Types text out character by character, like a typewriter.",
+    "useWhen": [
+      "An opening question, a short definition to stress"
+    ],
+    "avoidWhen": [
+      "Text longer than 2 lines",
+      "Code: use CodeBlock"
+    ],
+    "children": null,
+    "example": null,
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "def": "required",
+        "description": "Text to type out"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "cps",
+        "type": "number",
+        "def": "28",
+        "description": "Characters per second"
+      },
+      {
+        "name": "size",
+        "type": "\"display\" | \"title\" | \"heading\" | \"body\" | \"small\" | \"caption\" | \"label\"",
+        "def": "\"body\"",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "mono",
+        "type": "boolean",
+        "def": "false",
+        "description": ""
+      },
+      {
+        "name": "cursor",
+        "type": "boolean",
+        "def": "true",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Highlight",
+    "category": "primitive",
+    "summary": "Highlights, underlines or recolors a phrase exactly when the narration mentions it.",
+    "useWhen": [
+      "Stressing a key term in a sentence on screen"
+    ],
+    "avoidWhen": [
+      "Highlighting a whole long passage"
+    ],
+    "children": "Phrase to emphasise",
+    "example": null,
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "0.5",
+        "description": ""
+      },
+      {
+        "name": "mode",
+        "type": "\"underline\" | \"marker\" | \"text\"",
+        "def": "\"marker\"",
+        "description": "marker: highlights the background, underline: underlines, text: recolors the text"
+      }
+    ]
+  },
+  {
+    "name": "Brace",
+    "category": "primitive",
+    "summary": "A curly brace that grows under (or over) its child, exactly as wide, with a label: \"how many is this\", \"what this part is\".",
+    "useWhen": [
+      "Naming part of a formula or a stretch of an array: \"n elements\", \"the derivative\"",
+      "Grouping a few elements in a Row"
+    ],
+    "avoidWhen": [
+      "Labels inside a plot: use Label in Axes"
+    ],
+    "children": "The element being labelled",
+    "example": "math-morph.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Label under (or over) the brace, supports $…$"
+      },
+      {
+        "name": "dir",
+        "type": "\"down\" | \"up\"",
+        "def": "\"down\"",
+        "description": "Brace below or above the content"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "When the brace grows in"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "36",
+        "description": "Label font size"
+      }
+    ]
+  },
+  {
+    "name": "DrawPath",
+    "category": "primitive",
+    "summary": "Draws an SVG path progressively from start to end. Must be placed inside an <svg>.",
+    "useWhen": [
+      "Hand-drawn shapes, arrows, custom outlines"
+    ],
+    "avoidWhen": [
+      "Function graphs: use Graph",
+      "Block diagrams: use Diagram"
+    ],
+    "children": null,
+    "example": null,
+    "props": [
+      {
+        "name": "d",
+        "type": "string",
+        "def": "required",
+        "description": "The d attribute of an SVG path"
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "def": "1",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "4",
+        "description": ""
+      },
+      {
+        "name": "fill",
+        "type": "Color | \"none\"",
+        "def": "\"none\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Surround",
+    "category": "primitive",
+    "summary": "Hand-drawn mark around its child: box, circle, underline, strike-through (discarded) or cross (wrong), with a short label; stays until outAt.",
+    "useWhen": [
+      "Pointing out the result to remember (box), a mistake (cross), a rejected option (strike)",
+      "Circling a term in a formula or a cell in a table"
+    ],
+    "avoidWhen": [
+      "Brief emphasis: use Pulse"
+    ],
+    "children": "The element to mark",
+    "example": "derivation-physics.tsx",
+    "props": [
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "required",
+        "description": "When the box / stroke starts drawing around the child"
+      },
+      {
+        "name": "outAt",
+        "type": "number | string",
+        "def": "–",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "shape",
+        "type": "\"box\" | \"circle\" | \"underline\" | \"strike\" | \"cross\"",
+        "def": "\"box\"",
+        "description": "box frames, circle encircles, underline underlines, strike crosses out (discarded), cross marks it wrong"
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Short label above the frame, supports $…$"
+      },
+      {
+        "name": "padding",
+        "type": "number",
+        "def": "14",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Icon",
+    "category": "primitive",
+    "summary": "A line icon by name, with a label and an entrance effect. Available names: person, people, baby, student, book, pen, idea, question, check, cross, warning, star, heart, clock, calendar, search, target, trophy, flag, puzzle, home, school, building, factory, hospital, money, coins, cart, briefcase, scale, gavel, handshake, vote, newspaper, message, mail, quote, languages, library, theater, palette, brush, music, mic, camera, film, volume, phone, computer, code, database, cpu, wifi, lock, key, gear, cog, plug, rocket, satellite, calculator, plane, ship, sailboat, anchor, car, train, bike, ambulance, map, compass, pin, route, signpost, globe, earth, mountain, snow-mountain, tree, forest, waves, wind, tornado, sun, moon, cloud, rain, storm, cloud-sun, rainbow, sunrise, sunset, snowflake, thermometer, droplet, wheat, tractor, pickaxe, gem, fuel, recycle, atom, flask, beaker, test-tube, microscope, telescope, orbit, magnet, lightning, battery, flame, radiation, biohazard, gauge, ruler, weight, hourglass, hexagon, hammer, wrench, leaf, sprout, flower, apple, egg, milk, food, fish, bird, bug, rabbit, cat, dog, paw, dna, brain, bone, pulse, eye, ear, hand, footprints, activity, syringe, pill, stethoscope, skull, siren, shirt, crown, swords, sword, shield, castle, landmark, scroll, feather, tent, church, bomb, sigma, infinity, shapes, bar-chart, line-chart, pie-chart.",
+    "useWhen": [
+      "Illustrating concepts outside math: living things, weather, history, society",
+      "A row of icons + arrows for a cause → effect chain (Row + Icon + Arrow)"
+    ],
+    "avoidWhen": [
+      "Decoration without meaning",
+      "More than ~6 icons at once"
+    ],
+    "children": null,
+    "example": "icons-chain.tsx",
+    "props": [
+      {
+        "name": "name",
+        "type": "\"person\" | \"people\" | \"baby\" | \"student\" | \"book\" | \"pen\" | \"idea\" | \"question\" | \"check\" | \"cross\" | \"warning\" | \"star\" | \"heart\" | \"clock\" | \"calendar\" | \"search\" | \"target\" | \"trophy\" | \"flag\" | \"puzzle\" | \"home\" | \"school\" | \"building\" | \"factory\" | \"hospital\" | \"money\" | \"coins\" | \"cart\" | \"briefcase\" | \"scale\" | \"gavel\" | \"handshake\" | \"vote\" | \"newspaper\" | \"message\" | \"mail\" | \"quote\" | \"languages\" | \"library\" | \"theater\" | \"palette\" | \"brush\" | \"music\" | \"mic\" | \"camera\" | \"film\" | \"volume\" | \"phone\" | \"computer\" | \"code\" | \"database\" | \"cpu\" | \"wifi\" | \"lock\" | \"key\" | \"gear\" | \"cog\" | \"plug\" | \"rocket\" | \"satellite\" | \"calculator\" | \"plane\" | \"ship\" | \"sailboat\" | \"anchor\" | \"car\" | \"train\" | \"bike\" | \"ambulance\" | \"map\" | \"compass\" | \"pin\" | \"route\" | \"signpost\" | \"globe\" | \"earth\" | \"mountain\" | \"snow-mountain\" | \"tree\" | \"forest\" | \"waves\" | \"wind\" | \"tornado\" | \"sun\" | \"moon\" | \"cloud\" | \"rain\" | \"storm\" | \"cloud-sun\" | \"rainbow\" | \"sunrise\" | \"sunset\" | \"snowflake\" | \"thermometer\" | \"droplet\" | \"wheat\" | \"tractor\" | \"pickaxe\" | \"gem\" | \"fuel\" | \"recycle\" | \"atom\" | \"flask\" | \"beaker\" | \"test-tube\" | \"microscope\" | \"telescope\" | \"orbit\" | \"magnet\" | \"lightning\" | \"battery\" | \"flame\" | \"radiation\" | \"biohazard\" | \"gauge\" | \"ruler\" | \"weight\" | \"hourglass\" | \"hexagon\" | \"hammer\" | \"wrench\" | \"leaf\" | \"sprout\" | \"flower\" | \"apple\" | \"egg\" | \"milk\" | \"food\" | \"fish\" | \"bird\" | \"bug\" | \"rabbit\" | \"cat\" | \"dog\" | \"paw\" | \"dna\" | \"brain\" | \"bone\" | \"pulse\" | \"eye\" | \"ear\" | \"hand\" | \"footprints\" | \"activity\" | \"syringe\" | \"pill\" | \"stethoscope\" | \"skull\" | \"siren\" | \"shirt\" | \"crown\" | \"swords\" | \"sword\" | \"shield\" | \"castle\" | \"landmark\" | \"scroll\" | \"feather\" | \"tent\" | \"church\" | \"bomb\" | \"sigma\" | \"infinity\" | \"shapes\" | \"bar-chart\" | \"line-chart\" | \"pie-chart\"",
+        "def": "required",
+        "description": "Icon name (see the list in the docs)"
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "120",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "effect",
+        "type": "\"up\" | \"down\" | \"left\" | \"right\" | \"fade\" | \"pop\" | \"zoom\" | \"blur\" | \"wipe\" | \"flip\"",
+        "def": "\"pop\"",
+        "description": "Entrance: up/down/left/right slide in, pop bounces in, zoom grows from small, blur comes into focus, wipe sweeps from the left, flip flips in, fade only fades"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "def": "–",
+        "description": "Text under the icon, supports $…$"
+      },
+      {
+        "name": "badge",
+        "type": "boolean",
+        "def": "false",
+        "description": "Put the icon in a filled circle"
+      }
+    ]
+  },
+  {
+    "name": "Slider",
+    "category": "primitive",
+    "summary": "A slider showing a parameter as it changes (knob + number), following the same keyframes as the graph.",
+    "useWhen": [
+      "Exploring a parameter: \"as a grows, the graph …\" (next to the Axes, same keyframes as Plot params)",
+      "A physical quantity that changes: slope angle, mass, temperature"
+    ],
+    "avoidWhen": [
+      "A big number on its own: use Counter"
+    ],
+    "children": null,
+    "example": "plot-params.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "def": "required",
+        "description": "Parameter name, supports $…$, e.g. \"$a$\""
+      },
+      {
+        "name": "value",
+        "type": "number | { at: number | string; value: number; duration?: number; ease?: \"smooth\" | \"linear\" | \"spring\" }[]",
+        "def": "required",
+        "description": "Value (keyframes): use the SAME keyframes as the Plot params so slider and graph move together"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "def": "required",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "def": "520",
+        "description": ""
+      },
+      {
+        "name": "decimals",
+        "type": "integer",
+        "def": "1",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"accent\"",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "LiveTex",
+    "category": "primitive",
+    "summary": "A formula with live numbers: each {name} slot is filled with the current value of its keyframes, every frame.",
+    "useWhen": [
+      "Quantities computed from a moving picture: slope, area, sin θ = 0.71",
+      "Results that update as a parameter changes"
+    ],
+    "avoidWhen": [
+      "A static formula: use Formula"
+    ],
+    "children": null,
+    "example": "plot-params.tsx",
+    "props": [
+      {
+        "name": "tex",
+        "type": "string",
+        "def": "required",
+        "description": "TeX formula with {name} slots: \"a = {a}\", \"S = {s}\\text{ cm}^2\""
+      },
+      {
+        "name": "values",
+        "type": "object",
+        "def": "required",
+        "description": "Value for each slot (keyframes), updated every frame"
+      },
+      {
+        "name": "decimals",
+        "type": "integer",
+        "def": "2",
+        "description": ""
+      },
+      {
+        "name": "at",
+        "type": "number | string",
+        "def": "0",
+        "description": "Time: seconds, \"cue:<phrase from the narration>\", \"cue:<phrase>@end\", or \"end-<seconds>\""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "def": "64",
+        "description": ""
+      },
+      {
+        "name": "color",
+        "type": "Color",
+        "def": "\"text\"",
+        "description": ""
+      }
+    ]
+  }
+]

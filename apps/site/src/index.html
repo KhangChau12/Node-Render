@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Node Render</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,600;1,7..72,500&display=swap&subset=vietnamese" rel="stylesheet">
+<style>
+:root {
+  /* The product's own look: a dark editing suite with one orange accent, same tokens as the videos it renders. */
+  /* Layout: the hero is the Studio itself (monitor + timeline); the rest reads like a production log. */
+  --bg: #0d0f12;
+  --panel: #15181c;
+  --raised: #1d2126;
+  --line: #2a2e35;
+  --text: #ece9e2;
+  --muted: #a6a49e;
+  --faint: #6f6e6a;
+  --accent: #ff7a45;
+  --info: #73a7ff;
+  --ok: #5fc08a;
+  --warn: #e3c04e;
+  --display: "Literata", Georgia, serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --wrap: 1180px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.wrap { width: min(var(--wrap), 100% - 32px); margin-inline: auto; }
+.mono { font-family: var(--mono); }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+[hidden] { display: none !important; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--raised); color: var(--text); font: 500 15px var(--body); text-decoration: none; cursor: pointer; transition: border-color .15s, background .15s; white-space: nowrap; }
+.btn:hover { border-color: #3a3f47; background: #23282e; }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: #1a0d06; font-weight: 600; }
+.btn.pri:hover { background: #ff8b5c; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btn.sm { height: 34px; padding: 0 12px; font-size: 13.5px; border-radius: 8px; }
+
+/* Top bar */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 22px; height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -.01em; }
+.brand i { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; font: 600 15px var(--display); font-style: normal; color: #1a0d06; }
+.nav { display: flex; gap: 4px; }
+.nav a { padding: 7px 11px; border-radius: 8px; text-decoration: none; color: var(--muted); font-size: 14.5px; }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--text); background: var(--raised); }
+.sp { flex: 1; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.lang button { background: none; border: 0; color: var(--muted); font: 500 12.5px var(--mono); padding: 6px 10px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--raised); color: var(--text); }
+@media (max-width: 760px) { .nav { display: none; } .top .gh-text { display: none; } }
+
+/* Hero */
+.hero { padding: 64px 0 40px; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 13fr); gap: 44px; align-items: center; }
+@media (max-width: 980px) { .hero .wrap { grid-template-columns: 1fr; } }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font: 500 12.5px var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px 5px 8px; }
+.eyebrow b { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); font-weight: 500; border-radius: 999px; padding: 1px 8px; }
+.hero h1 { font: 600 clamp(38px, 4.8vw, 62px)/1.05 var(--display); letter-spacing: -.02em; margin: 22px 0 20px; }
+.hero h1 em { font-style: italic; font-weight: 500; color: var(--muted); }
+.hero .lead { color: var(--muted); font-size: 18px; max-width: 34em; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.clone { margin-top: 16px; display: flex; align-items: center; gap: 8px; font: 13px var(--mono); color: var(--faint); overflow-x: auto; white-space: nowrap; }
+.clone span { color: var(--muted); }
+
+/* Studio monitor */
+.monitor { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.8); }
+.mbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.mbar .k { font: 500 12px var(--mono); color: var(--accent); }
+.mbar b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mbar .tag { margin-left: auto; font: 11.5px var(--mono); color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.screen { position: relative; aspect-ratio: 16 / 9; background: #101215; }
+.screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.mfoot { padding: 9px 14px 11px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--faint); }
+.transport { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--line); }
+.tc { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
+.tc small { color: var(--faint); font-size: 12px; }
+.playb { width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--text); color: var(--bg); display: grid; place-items: center; cursor: pointer; }
+.playb svg { width: 15px; height: 15px; }
+.subj { margin-left: auto; font: 11.5px var(--mono); color: var(--muted); }
+.tl { position: relative; padding: 8px 14px 12px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 48px 1fr; row-gap: 6px; align-items: center; }
+.tl .lab { font: 11px var(--mono); color: var(--faint); }
+.lane { position: relative; height: 34px; }
+.lane.cues { height: 14px; }
+.clip { position: absolute; top: 0; bottom: 0; border-radius: 6px; background: var(--raised); border: 1px solid var(--line); color: var(--muted); font: 11px/1.2 var(--mono); padding: 4px 6px; text-align: left; overflow: hidden; cursor: pointer; white-space: nowrap; text-overflow: ellipsis; }
+.clip.on { border-color: var(--accent); color: var(--text); background: color-mix(in srgb, var(--accent) 14%, var(--raised)); }
+.cue { position: absolute; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--line); transform: translateX(-50%); transition: background .2s; }
+.cue.on { background: var(--accent); transform: translateX(-50%) scale(1.3); }
+.playhead { position: absolute; top: 4px; bottom: 6px; width: 2px; background: var(--accent); pointer-events: none; }
+.playhead::before { content: ""; position: absolute; top: -2px; left: -5px; border: 6px solid transparent; border-top-color: var(--accent); }
+
+/* Sections */
+section.block { padding: 84px 0; border-top: 1px solid var(--line); }
+.shead { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 40px; align-items: end; margin-bottom: 40px; }
+@media (max-width: 860px) { .shead { grid-template-columns: 1fr; gap: 14px; } }
+.shead h2 { font: 600 clamp(30px, 3.6vw, 44px)/1.1 var(--display); letter-spacing: -.015em; }
+.shead p { color: var(--muted); max-width: 38em; }
+
+/* Pipeline */
+.pipe { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+@media (max-width: 980px) { .pipe { grid-template-columns: 1fr; } }
+.stage { padding: 22px 20px 24px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--line); }
+.stage:last-child { border-right: 0; }
+@media (max-width: 980px) { .stage { border-right: 0; border-bottom: 1px solid var(--line); } .stage:last-child { border-bottom: 0; } }
+.stage .n { display: flex; align-items: center; gap: 10px; font: 500 12px var(--mono); color: var(--faint); }
+.stage .n i { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-style: normal; color: var(--text); }
+.stage:first-child .n i { background: var(--accent); border-color: var(--accent); color: #1a0d06; }
+.stage h3 { font: 600 20px/1.2 var(--display); }
+.stage p { font-size: 14.5px; color: var(--muted); }
+.stage .you, .stage .ai { font-size: 13.5px; padding-left: 12px; border-left: 2px solid var(--line); color: var(--muted); }
+.stage .ai { border-left-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.stage .you b, .stage .ai b { display: block; font: 500 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.prompt { margin-top: 18px; display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 15px; }
+.prompt .label { flex: none; padding-top: 3px; }
+
+/* Showcase */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.chip { border: 1px solid var(--line); background: none; color: var(--muted); font: 500 13.5px var(--body); padding: 7px 13px; border-radius: 999px; cursor: pointer; }
+.chip:hover { color: var(--text); }
+.chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+.chip .c { font: 11.5px var(--mono); opacity: .7; margin-left: 4px; }
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 980px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+.shot { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.shot .img { border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #101215; aspect-ratio: 16 / 9; }
+.shot .img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.shot:hover .img img { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .shot:hover .img img { transform: none; } }
+.shot figcaption { display: flex; flex-direction: column; gap: 6px; }
+.shot .t { display: flex; justify-content: space-between; gap: 10px; font-weight: 500; }
+.shot .t span { font: 11.5px var(--mono); color: var(--faint); white-space: nowrap; padding-top: 3px; }
+.shot .uses { display: flex; flex-wrap: wrap; gap: 5px; }
+.kc { font: 11.5px var(--mono); color: var(--muted); background: var(--raised); border-radius: 5px; padding: 2px 7px; text-decoration: none; }
+a.kc:hover { color: var(--accent); }
+.note { margin-top: 26px; font-size: 13.5px; color: var(--faint); }
+
+/* Features */
+.feats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+@media (max-width: 860px) { .feats { grid-template-columns: 1fr; } }
+.feat { padding: 30px 28px 32px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 44px 1fr; gap: 6px 14px; }
+.feat:nth-child(odd) { border-right: 1px solid var(--line); }
+.feat:nth-child(even) { padding-left: 28px; }
+@media (max-width: 860px) { .feat:nth-child(odd) { border-right: 0; } .feat:nth-child(even) { padding-left: 0; } }
+.feat .ix { font: 500 12px var(--mono); color: var(--accent); padding-top: 5px; }
+.feat h3 { font: 600 21px/1.25 var(--display); }
+.feat p { grid-column: 2; color: var(--muted); font-size: 15px; }
+.feat .demo { grid-column: 2; margin-top: 12px; }
+.cueline { font-size: 15px; line-height: 2.1; color: var(--muted); }
+.cueline mark { background: color-mix(in srgb, var(--info) 22%, transparent); color: var(--text); padding: 2px 4px; border-radius: 4px; }
+.cueline mark small { font: 10.5px var(--mono); color: var(--info); margin-left: 4px; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.check { font: 12px var(--mono); color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent); border-radius: 6px; padding: 3px 8px; }
+.check.w { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+.bubble { display: inline-block; background: var(--raised); border: 1px solid var(--line); border-radius: 10px 10px 10px 2px; padding: 8px 12px; font-size: 14px; }
+.bubble small { display: block; font: 11px var(--mono); color: var(--faint); }
+
+/* Quick start */
+.qs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 40px; align-items: start; }
+@media (max-width: 860px) { .qs { grid-template-columns: 1fr; } }
+.term { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.term .bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.term pre { margin: 0; padding: 18px 20px; overflow-x: auto; font: 14px/1.8 var(--mono); color: var(--text); }
+.term pre .c { color: var(--faint); }
+.term pre .p { color: var(--accent); user-select: none; }
+.reqs { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+.reqs div { display: flex; gap: 12px; font-size: 15px; color: var(--muted); }
+.reqs b { color: var(--text); font-weight: 500; min-width: 7em; }
+
+/* Final CTA + footer */
+.final { padding: 92px 0; border-top: 1px solid var(--line); text-align: left; }
+.final h2 { font: 600 clamp(32px, 4.4vw, 56px)/1.08 var(--display); letter-spacing: -.02em; max-width: 16em; }
+.final p { color: var(--muted); margin-top: 16px; max-width: 40em; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--faint); font-size: 13.5px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; }
+
+/* Kit view */
+.kithead { padding: 56px 0 26px; }
+.kithead h1 { font: 600 clamp(36px, 4.6vw, 58px)/1.06 var(--display); letter-spacing: -.02em; margin-top: 12px; }
+.kithead .lead { color: var(--muted); font-size: 17.5px; max-width: 42em; margin-top: 14px; }
+.stats { display: flex; flex-wrap: wrap; gap: 0; margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.stats div { flex: 1 1 160px; padding: 14px 18px; border-right: 1px solid var(--line); background: var(--panel); }
+.stats div:last-child { border-right: 0; }
+.stats b { display: block; font: 600 26px var(--display); font-variant-numeric: tabular-nums; }
+.stats span { font-size: 13px; color: var(--muted); }
+.kitbar { position: sticky; top: 62px; z-index: 10; background: var(--bg); padding: 14px 0; border-bottom: 1px solid var(--line); }
+.kitbar .wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.kitbar .chips { margin: 0; }
+.search { margin-left: auto; display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; height: 38px; background: var(--panel); min-width: 240px; }
+.search input { background: none; border: 0; color: var(--text); font: 14.5px var(--body); outline: none; width: 100%; }
+.search svg { width: 16px; height: 16px; color: var(--faint); flex: none; }
+.kitgroups { padding: 30px 0 80px; display: flex; flex-direction: column; gap: 44px; }
+.kitgroup h2 { font: 600 24px var(--display); display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.kitgroup h2 span { font: 12px var(--mono); color: var(--faint); }
+.kitgroup > p { color: var(--muted); font-size: 14.5px; margin-bottom: 16px; max-width: 48em; }
+.kgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.kcard { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0; color: var(--text); cursor: pointer; display: flex; flex-direction: column; overflow: hidden; font: inherit; transition: border-color .15s; }
+.kcard:hover { border-color: #3d424a; }
+.kcard .th { aspect-ratio: 16 / 9; background: #101215; border-bottom: 1px solid var(--line); }
+.kcard .th img { width: 100%; height: 100%; object-fit: cover; }
+.kcard .th.none { display: grid; place-items: center; color: var(--faint); font: 12px var(--mono); }
+.kcard .bd { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.kcard .nm { font: 500 15px var(--mono); }
+.kcard .sm { font-size: 13.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.empty { color: var(--faint); padding: 40px 0; }
+
+/* Kit detail dialog */
+dialog { width: min(980px, 100vw - 24px); max-height: calc(100vh - 40px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--text); }
+dialog::backdrop { background: rgba(5, 6, 8, .7); }
+.dlg { display: flex; flex-direction: column; max-height: calc(100vh - 42px); }
+.dlg header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.dlg header h3 { font: 500 18px var(--mono); }
+.dlg header .cat { font: 11.5px var(--mono); color: var(--faint); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; }
+.dlg .x { margin-left: auto; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--raised); color: var(--text); cursor: pointer; font-size: 18px; line-height: 1; }
+.dlg .body { overflow: auto; padding: 20px 18px 24px; display: flex; flex-direction: column; gap: 20px; }
+.dlg .sum { font-size: 16.5px; }
+.dlg .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .dlg .two { grid-template-columns: 1fr; } }
+.dlg ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; display: flex; flex-direction: column; gap: 4px; }
+.dlg .yes .label { color: var(--ok); }
+.dlg .no .label { color: #ef6158; }
+.dlg .shot img { border-radius: 10px; border: 1px solid var(--line); }
+.props { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.props table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.props th, .props td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.props th { font: 500 11.5px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .06em; background: var(--raised); }
+.props td:nth-child(-n+3) { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+.props td:nth-child(2) { color: var(--info); white-space: normal; min-width: 140px; max-width: 260px; overflow-wrap: anywhere; }
+.props td:nth-child(4) { color: var(--muted); }
+.props tr:last-child td { border-bottom: 0; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home"><i>N</i>Node Render</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#showcase" data-i18n="nav.showcase">Showcase</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#kit" data-view="kit" data-i18n="nav.kit">Kit</a>
+      <a href="#start" data-i18n="nav.start">Get started</a>
+    </nav>
+    <span class="sp"></span>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="vi" aria-pressed="false">VI</button>
+    </div>
+    <a class="btn sm" href="https://github.com/KhangChau12/Node-Render">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.08-2.7-1.08-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <span class="gh-text">GitHub</span>
+    </a>
+  </div>
+</header>
+
+<!-- ============================================================ PRODUCT -->
+<main id="view-home">
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow"><b>MIT</b><span data-i18n="hero.eyebrow">Open source · runs on your machine</span></span>
+        <h1 data-i18n="hero.title">Describe a lesson. <em>Watch it become</em> a lecture video.</h1>
+        <p class="lead" data-i18n="hero.lead">Node Render drafts the lesson with you, writes the script, then animates every scene in code. Its kit draws math, physics, chemistry, biology, history, geography and literature. You approve each step, and the MP4 renders on your own computer.</p>
+        <div class="cta">
+          <a class="btn pri" href="https://github.com/KhangChau12/Node-Render/archive/refs/heads/main.zip">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 3v10m0 0 4-4m-4 4-4-4M4 16h12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="cta.download">Download the source</span>
+          </a>
+          <a class="btn" href="https://github.com/KhangChau12/Node-Render" data-i18n="cta.github">View on GitHub</a>
+          <a class="btn" href="#kit" data-i18n="cta.kit">Browse the kit</a>
+        </div>
+        <div class="clone"><span>$</span> git clone https://github.com/KhangChau12/Node-Render</div>
+      </div>
+
+      <div class="monitor" aria-label="Preview of scenes rendered by Node Render">
+        <div class="mbar">
+          <span class="k" id="m-k">01</span>
+          <b id="m-title">—</b>
+          <span class="tag" id="m-tag">✓ code runs · cues match</span>
+        </div>
+        <div class="screen"><video id="reel" muted loop playsinline preload="auto"></video></div>
+        <div class="transport">
+          <button class="playb" id="play" type="button" aria-label="Pause"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path id="play-icon" d="M4 2h3v12H4zM9 2h3v12H9z"/></svg></button>
+          <span class="tc" id="tc">00:00.0 <small>/ 00:00.0</small></span>
+          <span class="subj" id="m-subj"></span>
+        </div>
+        <div class="tl">
+          <span class="lab">Scene</span>
+          <div class="lane" id="lane"></div>
+          <span class="lab">Cue</span>
+          <div class="lane cues" id="cues"></div>
+          <span class="playhead" id="playhead" style="left: 62px"></span>
+        </div>
+        <p class="mfoot" data-i18n="hero.reel">Unedited output: real scenes from the kit, cut together by Node Render with its own transitions and captions. The cue dots light up as the narration reaches them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="shead">
+        <h2 data-i18n="how.title">From one paragraph to an MP4, with you at every step</h2>
+        <p data-i18n="how.lead">Nothing is generated behind your back. Each stage streams in as the model writes, waits for your edits and approval, and only then hands over to the next.</p>
+      </div>
+      <div class="pipe">
+        <div class="stage">
+          <span class="n"><i>1</i><span data-i18n="how.s1.k">Prompt</span></span>
+          <h3 data-i18n="how.s1.t">Say what to teach</h3>
+          <p data-i18n="how.s1.p">Free text, the way you would brief a colleague. No form.</p>
+        </div>
+        <div class="stage">
+          <span class="n"><i>2</i><span data-i18n="how.s2.k">Lesson</span></span>
+          <h3 data-i18n="how.s2.t">Approve the content</h3>
+          <div class="ai"><b data-i18n="how.ai">Assistant</b><span data-i18n="how.s2.ai">drafts a storyline with one running example</span></div>
+          <div class="you"><b data-i18n="how.you">You</b><span data-i18n="how.s2.you">edit by hand or ask for changes, shown as word-level diffs</span></div>
+        </div>
+        <div class="stage">
+          <span class="n"><i>3</i><span data-i18n="how.s3.k">Script</span></span>
+          <h3 data-i18n="how.s3.t">Approve the storyboard</h3>
+          <div class="ai"><b data-i18n="how.ai">Assistant</b><span data-i18n="how.s3.ai">splits it into scenes: narration plus one visual beat per sentence</span></div>
+          <div class="you"><b data-i18n="how.you">You</b><span data-i18n="how.s3.you">reorder, split, rewrite</span></div>
+        </div>
+        <div class="stage">
+          <span class="n"><i>4</i><span data-i18n="how.s4.k">Studio</span></span>
+          <h3 data-i18n="how.s4.t">Fix any frame by chat</h3>
+          <div class="ai"><b data-i18n="how.ai">Assistant</b><span data-i18n="how.s4.ai">writes each scene with the kit, checks it, screenshots it, repairs it</span></div>
+          <div class="you"><b data-i18n="how.you">You</b><span data-i18n="how.s4.you">pause anywhere and say what to change</span></div>
+        </div>
+        <div class="stage">
+          <span class="n"><i>5</i><span data-i18n="how.s5.k">Export</span></span>
+          <h3 data-i18n="how.s5.t">Render locally</h3>
+          <p data-i18n="how.s5.p">MP4 from 720p to 4K with burned-in captions, plus an .srt of the narration.</p>
+        </div>
+      </div>
+      <div class="prompt"><span class="label" data-i18n="how.example">Example prompt</span><span data-i18n="how.prompt">“Photosynthesis for 7th graders, about 4 minutes, with a drawing of a leaf and the cycle of gases.”</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="showcase">
+    <div class="wrap">
+      <div class="shead">
+        <h2 data-i18n="show.title">Every subject gets its own kind of picture</h2>
+        <p data-i18n="show.lead">These frames are rendered by the kit, straight from scene code an AI can write. Filter by subject; the chips name the components each scene uses.</p>
+      </div>
+      <div class="chips" id="subjects" role="group" aria-label="Filter by subject"></div>
+      <div class="gallery" id="gallery"></div>
+      <p class="note" data-i18n="show.note">Every frame is rendered from the kit's examples, in the language you are reading. Lectures can be written in English or Vietnamese; numbers and map labels follow the lecture's language.</p>
+    </div>
+  </section>
+
+  <section class="block" id="features">
+    <div class="wrap">
+      <div class="shead">
+        <h2 data-i18n="feat.title">Built so that the video is right, not just pretty</h2>
+        <p data-i18n="feat.lead">Generated animation usually fails in the same few ways: overlapping text, visuals that ignore the voice, frames that never move. Each of these is handled by the system, not left to luck.</p>
+      </div>
+      <div class="feats">
+        <div class="feat">
+          <span class="ix">01</span>
+          <h3 data-i18n="f1.t">Synced to the narration, word by word</h3>
+          <p data-i18n="f1.p">Scenes refer to words of the narration, not to seconds. When the timing changes, or real voiceover replaces the estimate, every visual stays on its word.</p>
+          <div class="demo cueline" data-i18n="f1.demo">Take two points on the curve. The line through them is a <mark>secant<small>2.1s</small></mark>. Now <mark>drag the second point<small>5.4s</small></mark> closer, until the secant <mark>becomes the tangent<small>8.9s</small></mark>.</div>
+        </div>
+        <div class="feat">
+          <span class="ix">02</span>
+          <h3 data-i18n="f2.t">Checks its own work</h3>
+          <p data-i18n="f2.p">Every version is compiled and linted, then screenshotted and shown to a vision model that looks for overlaps, overflow and unreadable text and repairs them.</p>
+          <div class="demo checks"><span class="check" data-i18n="f2.c1">✓ code runs</span><span class="check" data-i18n="f2.c2">✓ 4 cues match</span><span class="check" data-i18n="f2.c3">✓ no overlaps</span><span class="check w" data-i18n="f2.c4">↻ fixed 1 visual issue</span></div>
+        </div>
+        <div class="feat">
+          <span class="ix">03</span>
+          <h3 data-i18n="f3.t">Edit any frame by talking</h3>
+          <p data-i18n="f3.p">Pause the preview, attach the frame or a marked-up screenshot, and describe the change. Every version is kept, one click to undo.</p>
+          <div class="demo"><span class="bubble"><small data-i18n="f3.at">Scene 04 · at 12.4s</small><span data-i18n="f3.msg">Make the formula bigger and move it under the graph.</span></span></div>
+        </div>
+        <div class="feat">
+          <span class="ix">04</span>
+          <h3 data-i18n="f4.t">A kit for every subject</h3>
+          <p data-i18n="f4.p">3D solids with hidden edges dashed automatically, molecules that react, maps with routes, annotated poems, timelines, physics that moves. Components lay themselves out, so text never collides.</p>
+          <div class="demo"><a class="btn sm" href="#kit" data-i18n="f4.cta">Explore the components</a></div>
+        </div>
+        <div class="feat">
+          <span class="ix">05</span>
+          <h3 data-i18n="f5.t">Yours, offline if you want</h3>
+          <p data-i18n="f5.p">Projects are plain files on your disk. Without an API key the whole flow runs in mock mode, so you can try it end to end before spending anything.</p>
+        </div>
+        <div class="feat">
+          <span class="ix">06</span>
+          <h3 data-i18n="f6.t">In English or Vietnamese</h3>
+          <p data-i18n="f6.p">The app speaks both, switchable in Settings. Lectures are written in the language of your request, whatever the interface language.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="start">
+    <div class="wrap qs">
+      <div>
+        <div class="shead" style="grid-template-columns: 1fr; margin-bottom: 0">
+          <h2 data-i18n="qs.title">Running in three commands</h2>
+          <p data-i18n="qs.lead">Clone it, add an OpenAI key or leave it empty for mock mode, and open the app.</p>
+        </div>
+        <div class="reqs">
+          <div><b data-i18n="qs.r1k">Node.js</b><span data-i18n="qs.r1">20 or newer</span></div>
+          <div><b data-i18n="qs.r2k">AI</b><span data-i18n="qs.r2">OpenAI key, a compatible endpoint, or none (mock mode)</span></div>
+          <div><b data-i18n="qs.r3k">Rendering</b><span data-i18n="qs.r3">Remotion; the first render downloads Chrome Headless (~100 MB)</span></div>
+        </div>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="label">Terminal</span><button class="btn sm" id="copy" type="button" data-i18n="qs.copy">Copy</button></div>
+<pre id="cmds"><span class="p">$ </span>git clone https://github.com/KhangChau12/Node-Render
+<span class="p">$ </span>cd Node-Render && npm install
+<span class="p">$ </span>cp .env.example .env.local   <span class="c"># add OPENAI_API_KEY, or leave it empty</span>
+<span class="p">$ </span>npm run dev                  <span class="c"># http://localhost:3210</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <span class="label" data-i18n="final.k">Open source · MIT</span>
+      <h2 data-i18n="final.title" style="margin-top: 14px">Take it, run it, make it teach your subject.</h2>
+      <p data-i18n="final.p">The kit is meant to grow: every component is a React file with a schema, an example and a line in the docs the AI reads. Patterns the AI keeps drawing by hand are the next components to add.</p>
+      <div class="cta">
+        <a class="btn pri" href="https://github.com/KhangChau12/Node-Render/archive/refs/heads/main.zip"><span data-i18n="cta.download">Download the source</span></a>
+        <a class="btn" href="https://github.com/KhangChau12/Node-Render" data-i18n="cta.github">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================================ KIT -->
+<main id="view-kit" hidden>
+  <div class="kithead">
+    <div class="wrap">
+      <span class="label" data-i18n="kit.k">packages/kit · @lecture/kit</span>
+      <h1 data-i18n="kit.title">The Lecture Kit</h1>
+      <p class="lead" data-i18n="kit.lead">The building blocks the AI writes scenes with. Each one is a Remotion component with a Zod schema: props are validated at runtime, errors go back to the AI to fix, and the same schema generates the docs it reads. Click any component for its props and example.</p>
+      <div class="stats">
+        <div><b id="st-n">0</b><span data-i18n="kit.st1">components and helpers</span></div>
+        <div><b id="st-ex">0</b><span data-i18n="kit.st2">runnable examples</span></div>
+        <div><b id="st-sub">8</b><span data-i18n="kit.st3">subjects covered</span></div>
+        <div><b>0</b><span data-i18n="kit.st4">pixels placed by hand in scene code</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="kitbar">
+    <div class="wrap">
+      <div class="chips" id="kitcats" role="group" aria-label="Filter by category"></div>
+      <label class="search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="m14 14 4 4" stroke-linecap="round"/></svg><input id="q" type="search" placeholder="Search components" data-i18n-ph="kit.search" aria-label="Search components"></label>
+    </div>
+  </div>
+  <div class="wrap kitgroups" id="kitgroups"></div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlg-name">
+  <div class="dlg">
+    <header><h3 id="dlg-name"></h3><span class="cat" id="dlg-cat"></span><button class="x" type="button" id="dlg-x" aria-label="Close">×</button></header>
+    <div class="body" id="dlg-body"></div>
+  </div>
+</dialog>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="foot.l">Node Render · MIT license · built on Remotion, KaTeX and Lucide</span>
+    <span data-i18n="foot.r">Rendering uses Remotion, free for individuals and teams of up to 3; larger companies need a Remotion license.</span>
+  </div>
+</footer>
+
+<script>
+/*SITE_DATA*/
+
+/* ---------------------------------------------------------------- i18n */
+const T = {
+  vi: {
+    "nav.how": "Cách hoạt động", "nav.showcase": "Trưng bày", "nav.features": "Tính năng", "nav.kit": "Kit", "nav.start": "Bắt đầu",
+    "hero.eyebrow": "Mã nguồn mở · chạy trên máy của bạn",
+    "hero.title": "Mô tả bài học. <em>Nhìn nó thành</em> video bài giảng.",
+    "hero.lead": "Node Render cùng bạn soạn bài giảng, viết kịch bản, rồi dựng từng scene bằng code. Bộ kit vẽ được toán, lý, hoá, sinh, sử, địa và văn. Bạn duyệt ở từng bước, và video MP4 được render ngay trên máy của bạn.",
+    "cta.download": "Tải mã nguồn", "cta.github": "Xem trên GitHub", "cta.kit": "Xem bộ kit",
+    "how.title": "Từ một đoạn mô tả đến video MP4, bạn có mặt ở mọi bước",
+    "how.lead": "Không có gì được tạo sau lưng bạn. Mỗi bước hiện dần khi model đang viết, chờ bạn sửa và duyệt, rồi mới chuyển sang bước sau.",
+    "how.ai": "Trợ lý", "how.you": "Bạn",
+    "how.s1.k": "Mô tả", "how.s1.t": "Nói điều cần dạy", "how.s1.p": "Viết tự do như khi nhờ đồng nghiệp. Không có form.",
+    "how.s2.k": "Bài giảng", "how.s2.t": "Duyệt nội dung", "how.s2.ai": "soạn mạch bài với một ví dụ xuyên suốt", "how.s2.you": "sửa tay hoặc nhờ sửa, thay đổi hiện theo từng từ",
+    "how.s3.k": "Kịch bản", "how.s3.t": "Duyệt kịch bản", "how.s3.ai": "chia thành scene: lời đọc và một nhịp hình cho mỗi câu", "how.s3.you": "sắp xếp, tách, viết lại",
+    "how.s4.k": "Studio", "how.s4.t": "Sửa khung hình bằng chat", "how.s4.ai": "viết từng scene bằng kit, kiểm tra, chụp hình, tự sửa", "how.s4.you": "dừng ở bất kỳ đâu và nói điều cần đổi",
+    "how.s5.k": "Xuất", "how.s5.t": "Render trên máy", "how.s5.p": "MP4 từ 720p đến 4K, có phụ đề in sẵn, kèm file .srt lời đọc.",
+    "how.example": "Ví dụ mô tả", "how.prompt": "“Quang hợp cho học sinh lớp 7, khoảng 4 phút, có hình vẽ chiếc lá và chu trình các chất khí.”",
+    "show.title": "Mỗi môn học có kiểu hình riêng",
+    "show.lead": "Những khung hình này do kit render, từ chính đoạn code scene mà AI viết được. Lọc theo môn; các nhãn cho biết scene dùng component nào.",
+    "show.note": "Mọi khung hình đều được render từ các ví dụ của kit, theo ngôn ngữ bạn đang đọc. Bài giảng viết được bằng tiếng Anh hoặc tiếng Việt; số và nhãn bản đồ theo ngôn ngữ của bài.",
+    "hero.reel": "Kết quả không chỉnh sửa: các scene thật của kit, được Node Render nối lại với chuyển cảnh và phụ đề của chính nó. Các chấm cue sáng lên khi lời đọc chạm tới.",
+    "feat.title": "Làm để video đúng, không chỉ đẹp",
+    "feat.lead": "Hoạt hình do AI tạo thường hỏng theo vài kiểu quen thuộc: chữ đè nhau, hình chạy lệch lời đọc, khung hình đứng im. Hệ thống xử lý từng kiểu một, không phó mặc cho may rủi.",
+    "f1.t": "Khớp lời đọc đến từng từ", "f1.p": "Scene bám vào từ trong lời đọc, không bám vào số giây. Khi nhịp đọc đổi, hay khi có giọng thật thay cho ước tính, mọi hình vẫn đến đúng từ của nó.",
+    "f1.demo": "Lấy hai điểm trên đường cong. Đường nối chúng là <mark>cát tuyến<small>2.1s</small></mark>. Giờ <mark>kéo điểm thứ hai<small>5.4s</small></mark> lại gần, đến khi cát tuyến <mark>trở thành tiếp tuyến<small>8.9s</small></mark>.",
+    "f2.t": "Tự kiểm tra", "f2.p": "Mỗi phiên bản được biên dịch và kiểm tra quy tắc, rồi chụp hình cho một model thị giác tìm chỗ chồng chữ, tràn khung, chữ khó đọc và tự sửa.",
+    "f2.c1": "✓ code chạy được", "f2.c2": "✓ 4 cue khớp", "f2.c3": "✓ không chồng chữ", "f2.c4": "↻ đã sửa 1 lỗi hình",
+    "f3.t": "Sửa bất kỳ khung hình nào bằng lời", "f3.p": "Dừng bản xem trước, đính kèm khung hình hoặc ảnh chụp có khoanh vùng, rồi mô tả thay đổi. Mọi phiên bản đều được giữ, hoàn tác bằng một cú bấm.",
+    "f3.at": "Scene 04 · tại 12.4s", "f3.msg": "Cho công thức to hơn và chuyển xuống dưới đồ thị.",
+    "f4.t": "Bộ kit cho mọi môn", "f4.p": "Khối 3D tự vẽ nét khuất, phân tử phản ứng được, bản đồ có đường đi, bài thơ có chú thích, dòng thời gian, vật lý chuyển động. Component tự xếp chỗ nên chữ không bao giờ đè nhau.", "f4.cta": "Khám phá các component",
+    "f5.t": "Của bạn, chạy offline nếu muốn", "f5.p": "Dự án là các tệp trên ổ đĩa của bạn. Không cần API key, cả quy trình vẫn chạy ở chế độ mock để bạn thử trọn vẹn trước khi tốn chi phí.",
+    "f6.t": "Tiếng Anh hoặc tiếng Việt", "f6.p": "Ứng dụng có cả hai ngôn ngữ, đổi trong Cài đặt. Bài giảng luôn viết theo ngôn ngữ bạn dùng khi mô tả, không phụ thuộc ngôn ngữ giao diện.",
+    "qs.title": "Chạy được sau ba lệnh", "qs.lead": "Clone về, thêm khoá OpenAI hoặc để trống để chạy mock, rồi mở ứng dụng.",
+    "qs.r1k": "Node.js", "qs.r1": "bản 20 trở lên", "qs.r2k": "AI", "qs.r2": "khoá OpenAI, endpoint tương thích, hoặc không cần (chế độ mock)", "qs.r3k": "Render", "qs.r3": "Remotion; lần render đầu tải Chrome Headless (~100 MB)", "qs.copy": "Sao chép", "qs.copied": "Đã sao chép",
+    "final.k": "Mã nguồn mở · MIT", "final.title": "Lấy về, chạy thử, cho nó dạy môn của bạn.",
+    "final.p": "Bộ kit được làm để lớn dần: mỗi component là một file React có schema, ví dụ và một dòng trong tài liệu AI đọc. Những gì AI cứ phải tự vẽ tay chính là component nên thêm tiếp theo.",
+    "kit.k": "packages/kit · @lecture/kit", "kit.title": "Bộ Lecture Kit",
+    "kit.lead": "Những viên gạch để AI dựng scene. Mỗi viên là một component Remotion có schema Zod: props được kiểm tra khi chạy, lỗi được gửi lại cho AI sửa, và chính schema đó sinh ra tài liệu AI đọc. Bấm vào component bất kỳ để xem props và ví dụ.",
+    "kit.st1": "component và công cụ", "kit.st2": "ví dụ chạy được", "kit.st3": "môn học", "kit.st4": "điểm ảnh đặt tay trong code scene",
+    "kit.search": "Tìm component", "kit.all": "Tất cả", "kit.none": "Không có component nào khớp.",
+    "kit.useWhen": "Dùng khi", "kit.avoidWhen": "Không dùng khi", "kit.children": "Phần tử con", "kit.props": "Props", "kit.example": "Ví dụ",
+    "kit.col.name": "Tên", "kit.col.type": "Kiểu", "kit.col.def": "Mặc định", "kit.col.desc": "Mô tả", "kit.noExample": "chưa có ảnh",
+    "foot.l": "Node Render · giấy phép MIT · xây trên Remotion, KaTeX và Lucide",
+    "foot.r": "Render dùng Remotion, miễn phí cho cá nhân và nhóm đến 3 người; công ty lớn hơn cần giấy phép Remotion.",
+    "m.tag": "✓ code chạy · cue khớp",
+  },
+  en: { "kit.all": "All", "kit.none": "No component matches.", "kit.useWhen": "Use when", "kit.avoidWhen": "Avoid when", "kit.children": "Children", "kit.props": "Props", "kit.example": "Example",
+        "kit.col.name": "Name", "kit.col.type": "Type", "kit.col.def": "Default", "kit.col.desc": "Description", "kit.noExample": "no preview", "qs.copy": "Copy", "qs.copied": "Copied", "m.tag": "✓ code runs · cues match" },
+};
+// English text lives in the HTML; remember it so switching back restores it.
+const EN_HTML = new Map();
+document.querySelectorAll("[data-i18n]").forEach((el) => EN_HTML.set(el, el.innerHTML));
+let lang = "en";
+try { if (localStorage.getItem("nr-lang") === "vi") lang = "vi"; } catch {}
+const t = (k) => (T[lang] && T[lang][k]) || T.en[k] || k;
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const k = el.dataset.i18n;
+    el.innerHTML = lang === "vi" && T.vi[k] ? T.vi[k] : (T.en[k] ?? EN_HTML.get(el));
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = lang === "vi" ? T.vi[el.dataset.i18nPh] : "Search components"; });
+  document.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  renderShowcase();
+  renderKit();
+  if (dlg.open && openName) openKit(openName);
+  loadReel();
+  syncMonitor(true);
+}
+document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => {
+  lang = b.dataset.lang;
+  try { localStorage.setItem("nr-lang", lang); } catch {}
+  applyLang();
+}));
+
+/* ------------------------------------------------------------ subjects */
+const SUBJECTS = [
+  ["all", "All", "Tất cả"], ["math", "Math", "Toán"], ["physics", "Physics", "Vật lý"], ["chem", "Chemistry", "Hoá học"],
+  ["bio", "Biology", "Sinh học"], ["histgeo", "History & geography", "Sử & địa"], ["lit", "Literature", "Văn"], ["cs", "Computer science", "Tin học"],
+];
+const SHOTS = [
+  ["three-pyramid", "math", "Pyramid S.ABCD, hidden edges dashed", "Hình chóp S.ABCD, nét khuất tự đứt", ["Axes3D", "Solid"]],
+  ["stage-physics", "physics", "A spring oscillator that moves", "Con lắc lò xo dao động", ["Stage", "Spring", "Group", "Vector"]],
+  ["chem-reaction", "chem", "Bonds break, atoms rearrange: 2H₂ + O₂ → 2H₂O", "Liên kết đứt, nguyên tử sắp xếp lại: 2H₂ + O₂ → 2H₂O", ["Molecule", "Formula"]],
+  ["map-history", "histgeo", "Vasco da Gama's route to India", "Đường biển sang Ấn Độ của Vasco da Gama", ["WorldMap"]],
+  ["passage-poem", "lit", "Close reading of Sonnet 18", "Phân tích câu thơ, có chú thích", ["Passage"]],
+  ["three-surface", "math", "A saddle surface with its two sections", "Mặt yên ngựa và hai lát cắt", ["Axes3D", "Surface", "Curve3D"]],
+  ["axes-complex", "math", "z ↦ z² bends the whole plane", "z ↦ z² uốn cong cả mặt phẳng", ["Axes", "warp"]],
+  ["chem-ionic", "chem", "Na gives an electron to Cl", "Na nhường electron cho Cl", ["Atom", "Arrow"]],
+  ["stage-biology", "bio", "A plant cell drawn from shapes", "Tế bào thực vật dựng từ hình", ["Stage", "Path", "Circle"]],
+  ["timeline-history", "histgeo", "From the first flight to the Moon", "Ba chiến thắng, cách nhau đúng số năm", ["Timeline"]],
+  ["mindmap-literature", "lit", "Romeo and Juliet, four ways in", "Truyện Kiều qua bốn góc nhìn", ["MindMap"]],
+  ["derivation-physics", "physics", "A worked free-fall problem", "Lời giải bài rơi tự do", ["Derivation", "Surround"]],
+  ["axes-derivative", "math", "The secant shrinks into the tangent", "Cát tuyến co lại thành tiếp tuyến", ["Axes", "Secant"]],
+  ["icons-water", "bio", "The water cycle, stage by stage", "Vòng tuần hoàn nước, từng giai đoạn", ["Cycle", "Icon"]],
+  ["chart-climate", "histgeo", "London and Singapore, month by month", "Khí hậu hai miền", ["Axes", "Scatter", "Region"]],
+  ["grid-dp", "cs", "Dynamic programming, cell by cell", "Quy hoạch động, từng ô", ["GridViz"]],
+  ["panels-problem", "math", "One problem, three views", "Một bài toán, ba góc nhìn", ["Panels", "Stage", "Derivation", "Axes"]],
+  ["axes-fourier", "math", "Circles on circles draw a square", "Vòng tròn chồng vòng tròn vẽ ra hình vuông", ["Epicycles"]],
+  ["array-quicksort", "cs", "Quick sort partition, step by step", "Phân hoạch quick sort, từng bước", ["ArrayViz"]],
+  ["venn-sets", "math", "Counting with a Venn diagram", "Đếm bằng biểu đồ Venn", ["Venn"]],
+  ["pie-economy", "chem", "What air is made of", "Thành phần của không khí", ["PieChart"]],
+  ["axes-field", "physics", "Particles drifting in a vector field", "Hạt trôi theo trường vector", ["Axes", "VectorField"]],
+  ["icons-chain", "histgeo", "Deforestation leads to flash floods", "Mất rừng dẫn tới lũ quét", ["Icon", "Arrow", "Pulse"]],
+  ["tree", "cs", "A recursion tree, visited in order", "Cây đệ quy, duyệt theo thứ tự", ["Tree"]],
+  ["axes-linear", "math", "A matrix transforms the plane", "Ma trận biến đổi mặt phẳng", ["Axes", "Vector", "matrix"]],
+  ["plot-params", "math", "One parameter, a family of curves", "Một tham số, cả họ đường cong", ["Plot", "Slider", "LiveTex"]],
+  ["math-morph", "math", "Terms travel across the equals sign", "Hạng tử đi qua dấu bằng", ["MathMorph"]],
+  ["diagram", "cs", "A pulse travels through a graph", "Tín hiệu chạy qua đồ thị", ["Diagram"]],
+  ["axes-riemann", "math", "Riemann sums refine toward the area", "Tổng Riemann mịn dần tới diện tích", ["Axes", "Riemann"]],
+  ["code-steps", "cs", "Code with a moving highlight", "Code với dòng tô sáng di chuyển", ["CodeBlock", "Switch"]],
+];
+let subject = "all";
+const subjName = (id) => { const s = SUBJECTS.find((x) => x[0] === id); return lang === "vi" ? s[2] : s[1]; };
+
+function renderShowcase() {
+  const bar = document.getElementById("subjects");
+  bar.innerHTML = SUBJECTS.map(([id]) => {
+    const n = id === "all" ? SHOTS.length : SHOTS.filter((s) => s[1] === id).length;
+    return `<button class="chip" type="button" data-s="${id}" aria-pressed="${id === subject}">${subjName(id)}<span class="c">${n}</span></button>`;
+  }).join("");
+  bar.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { subject = b.dataset.s; renderShowcase(); }));
+  const kitNames = new Set(KIT.map((k) => k.name));
+  document.getElementById("gallery").innerHTML = SHOTS.filter((s) => subject === "all" || s[1] === subject).map(([id, sub, en, vi, uses]) => `
+    <figure class="shot">
+      <div class="img"><img src="media/${lang}/${id}.jpg" alt="${lang === "vi" ? vi : en}" loading="lazy" width="960" height="540"></div>
+      <figcaption>
+        <div class="t">${lang === "vi" ? vi : en}<span>${subjName(sub)}</span></div>
+        <div class="uses">${uses.map((u) => kitNames.has(u) ? `<a class="kc" href="#kit" data-open="${u}">${u}</a>` : `<span class="kc">${u}</span>`).join("")}</div>
+      </figcaption>
+    </figure>`).join("");
+}
+
+/* ------------------------------------------------------------- monitor */
+// The hero plays a reel rendered by the product itself (real scenes, its transitions and captions).
+// The timeline under it comes from the same render: scene boundaries and the moment each cue fires.
+const video = document.getElementById("reel");
+const lane = document.getElementById("lane");
+const cuesLane = document.getElementById("cues");
+const playBtn = document.getElementById("play");
+const playIcon = document.getElementById("play-icon");
+const PAUSE = "M4 2h3v12H4zM9 2h3v12H9z";
+const PLAY = "M4 2l10 6-10 6z";
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let reel = null;
+let reelLang = null;
+let shown = -1;
+let cueDots = [];
+const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${(s % 60).toFixed(1).padStart(4, "0")}`;
+const setIcon = () => {
+  playIcon.setAttribute("d", video.paused ? PLAY : PAUSE);
+  playBtn.setAttribute("aria-label", video.paused ? "Play" : "Pause");
+};
+
+function loadReel() {
+  if (reelLang === lang) return;
+  const wasPaused = reelLang !== null && video.paused;
+  reelLang = lang;
+  reel = REELS[lang];
+  shown = -1;
+  video.poster = `media/${lang}/${reel.scenes[0].id}.jpg`;
+  video.src = `media/${lang}/reel.mp4`;
+  lane.innerHTML = "";
+  cuesLane.innerHTML = "";
+  cueDots = [];
+  reel.scenes.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "clip";
+    b.type = "button";
+    b.style.left = `calc(${(s.start / reel.duration) * 100}% + 1px)`;
+    b.style.width = `calc(${(s.duration / reel.duration) * 100}% - 2px)`;
+    b.textContent = String(i + 1).padStart(2, "0");
+    b.title = s.title;
+    b.addEventListener("click", () => {
+      video.currentTime = s.start + 0.05;
+      syncMonitor(true);
+    });
+    lane.appendChild(b);
+    s.cues.forEach((c) => {
+      const d = document.createElement("span");
+      d.className = "cue";
+      d.style.left = `${((s.start + c) / reel.duration) * 100}%`;
+      cuesLane.appendChild(d);
+      cueDots.push({ el: d, at: s.start + c, scene: i });
+    });
+  });
+  if (!reduce && !wasPaused) video.play().catch(() => setIcon());
+  setIcon();
+}
+
+function syncMonitor(force) {
+  if (!reel) return;
+  const time = video.currentTime || 0;
+  const i = Math.max(0, reel.scenes.findLastIndex((s) => time >= s.start));
+  if (i !== shown || force) {
+    const s = reel.scenes[i];
+    lane.querySelectorAll(".clip").forEach((c, k) => c.classList.toggle("on", k === i));
+    document.getElementById("m-k").textContent = String(i + 1).padStart(2, "0");
+    document.getElementById("m-title").textContent = s.title;
+    document.getElementById("m-subj").textContent = subjName(s.subject);
+    document.getElementById("m-tag").textContent = t("m.tag");
+    shown = i;
+  }
+  // A cue lights up once the narration has reached it in the current scene.
+  cueDots.forEach((c) => c.el.classList.toggle("on", c.scene === i && time >= c.at));
+  document.getElementById("tc").innerHTML = `${fmt(time)} <small>/ ${fmt(reel.duration)}</small>`;
+  const tl = lane.getBoundingClientRect();
+  const box = lane.parentElement.getBoundingClientRect();
+  document.getElementById("playhead").style.left = `${tl.left - box.left + (time / reel.duration) * tl.width - 1}px`;
+}
+
+playBtn.addEventListener("click", () => {
+  if (video.paused) video.play().catch(() => {});
+  else video.pause();
+});
+video.addEventListener("play", setIcon);
+video.addEventListener("pause", setIcon);
+function tick() {
+  syncMonitor(false);
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+window.addEventListener("resize", () => syncMonitor(true));
+
+/* ------------------------------------------------------------- kit page */
+const CATS = [
+  ["layout", "Layouts", "Layout", "The root of every scene: they hold the title, keep clear of the captions and shrink content that would overflow.", "Gốc của mọi scene: giữ tiêu đề, tránh vùng phụ đề và thu nhỏ nội dung khi tràn."],
+  ["component", "Components", "Component", "Complete visuals that lay themselves out: arrays, trees, maps, molecules, timelines, coordinate systems, 3D spaces.", "Hình minh hoạ hoàn chỉnh, tự xếp chỗ: mảng, cây, bản đồ, phân tử, dòng thời gian, hệ toạ độ, không gian 3D."],
+  ["plot", "Inside Axes, Stage and Axes3D", "Trong Axes, Stage và Axes3D", "Objects placed by coordinates. They follow the camera, the matrix and the warp of their space, and can move with keyframes or expressions of time.", "Đối tượng đặt theo toạ độ. Chúng đi theo camera, ma trận và phép uốn của không gian chứa nó, chuyển động theo mốc hoặc theo thời gian."],
+  ["primitive", "Primitives", "Primitive", "Motion and layout tools for custom pieces: entrances, emphasis, camera moves, counters, icons.", "Công cụ chuyển động và bố cục cho phần tự làm: xuất hiện, nhấn mạnh, máy quay, bộ đếm, icon."],
+];
+let cat = "all";
+let query = "";
+const L = (k) => (lang === "vi" ? k.vi : k.en);
+const kimg = (k) => `media/${lang}/${k.ex}.jpg`;
+// The example file shown in the dialog is the one matching the language.
+const exFile = (k) => (lang === "en" ? `en/${k.example}` : k.example);
+const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+// Kit text uses $…$ for math; show it as code-like text.
+const rich = (s) => esc(s).replace(/\$([^$]+)\$/g, '<span class="mono" style="color:var(--info)">$1</span>').replace(/`([^`]+)`/g, '<span class="mono">$1</span>');
+
+function renderKit() {
+  document.getElementById("st-n").textContent = KIT_STATS.elements;
+  document.getElementById("st-ex").textContent = KIT_STATS.examples;
+  const bar = document.getElementById("kitcats");
+  bar.innerHTML = [["all"], ...CATS].map(([id]) => {
+    const c = CATS.find((x) => x[0] === id);
+    const label = id === "all" ? t("kit.all") : lang === "vi" ? c[2] : c[1];
+    const n = id === "all" ? KIT.length : KIT.filter((k) => k.category === id).length;
+    return `<button class="chip" type="button" data-c="${id}" aria-pressed="${id === cat}">${label}<span class="c">${n}</span></button>`;
+  }).join("");
+  bar.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { cat = b.dataset.c; renderKit(); }));
+  const q = query.trim().toLowerCase();
+  const match = (k) => !q || `${k.name} ${k.en.summary} ${k.vi.summary}`.toLowerCase().includes(q);
+  const groups = CATS.filter((c) => cat === "all" || c[0] === cat).map((c) => {
+    const items = KIT.filter((k) => k.category === c[0] && match(k));
+    if (!items.length) return "";
+    return `<section class="kitgroup"><h2>${lang === "vi" ? c[2] : c[1]}<span>${items.length}</span></h2><p>${lang === "vi" ? c[4] : c[3]}</p><div class="kgrid">${items.map((k) => `
+      <button class="kcard" type="button" data-open="${k.name}">
+        ${k.ex ? `<div class="th"><img src="${kimg(k)}" alt="" loading="lazy" width="960" height="540"></div>` : `<div class="th none">${t("kit.noExample")}</div>`}
+        <div class="bd"><span class="nm">&lt;${k.name}&gt;</span><span class="sm">${rich(L(k).summary)}</span></div>
+      </button>`).join("")}</div></section>`;
+  }).join("");
+  document.getElementById("kitgroups").innerHTML = groups || `<p class="empty">${t("kit.none")}</p>`;
+}
+document.getElementById("q").addEventListener("input", (e) => { query = e.target.value; renderKit(); });
+
+const dlg = document.getElementById("dlg");
+let openName = null;
+function openKit(name) {
+  const k = KIT.find((x) => x.name === name);
+  if (!k) return;
+  openName = name;
+  const c = CATS.find((x) => x[0] === k.category);
+  document.getElementById("dlg-name").textContent = `<${k.name}>`;
+  document.getElementById("dlg-cat").textContent = lang === "vi" ? c[2] : c[1];
+  const d = L(k);
+  document.getElementById("dlg-body").innerHTML = `
+    <p class="sum">${rich(d.summary)}</p>
+    ${k.ex ? `<figure class="shot" style="margin:0"><img src="${kimg(k)}" alt="" width="960" height="540"><figcaption class="label">${t("kit.example")} · examples/${esc(exFile(k))}</figcaption></figure>` : ""}
+    <div class="two">
+      <div class="yes"><span class="label">${t("kit.useWhen")}</span><ul>${d.useWhen.map((u) => `<li>${rich(u)}</li>`).join("")}</ul></div>
+      <div class="no"><span class="label">${t("kit.avoidWhen")}</span><ul>${d.avoidWhen.map((u) => `<li>${rich(u)}</li>`).join("")}</ul></div>
+    </div>
+    ${d.children ? `<div><span class="label">${t("kit.children")}</span><p style="color:var(--muted);margin-top:6px">${rich(d.children)}</p></div>` : ""}
+    <div><span class="label">${t("kit.props")}</span>
+      <div class="props" style="margin-top:8px"><table><thead><tr><th>${t("kit.col.name")}</th><th>${t("kit.col.type")}</th><th>${t("kit.col.def")}</th><th>${t("kit.col.desc")}</th></tr></thead>
+      <tbody>${k.props.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.type)}</td><td>${esc(p.def)}</td><td>${rich(lang === "vi" ? p.vi : p.en)}</td></tr>`).join("")}</tbody></table></div>
+    </div>`;
+  if (!dlg.open) dlg.showModal();
+}
+document.getElementById("dlg-x").addEventListener("click", () => dlg.close());
+dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-open]");
+  if (el) { e.preventDefault(); if (location.hash !== "#kit") location.hash = "kit"; openKit(el.dataset.open); }
+});
+
+/* -------------------------------------------------------------- routing */
+function route() {
+  const h = location.hash.slice(1);
+  const kit = h === "kit";
+  document.getElementById("view-home").hidden = kit;
+  document.getElementById("view-kit").hidden = !kit;
+  document.querySelectorAll(".nav a").forEach((a) => a.toggleAttribute("aria-current", kit && a.dataset.view === "kit"));
+  if (kit) { window.scrollTo(0, 0); return; }
+  const target = h && document.getElementById(h);
+  if (target) target.scrollIntoView();
+  else window.scrollTo(0, 0);
+  syncMonitor(true);
+}
+window.addEventListener("hashchange", route);
+
+/* ----------------------------------------------------------------- copy */
+document.getElementById("copy").addEventListener("click", async (e) => {
+  const text = document.getElementById("cmds").innerText.replace(/^\$ /gm, "").replace(/\s+#.*$/gm, "");
+  try { await navigator.clipboard.writeText(text); e.target.textContent = t("qs.copied"); setTimeout(() => (e.target.textContent = t("qs.copy")), 1600); } catch {}
+});
+
+applyLang();
+route();
+</script>
+</body>
+</html>

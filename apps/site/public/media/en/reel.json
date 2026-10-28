@@ -1,0 +1,101 @@
+{
+ "duration": 129.4,
+ "scenes": [
+  {
+   "id": "three-pyramid",
+   "subject": "math",
+   "title": "Pyramid S.ABCD, hidden edges dashed",
+   "start": 0,
+   "duration": 19.566666666666666,
+   "cues": [
+    1.2,
+    7.2,
+    9.4,
+    13.2,
+    15.7
+   ]
+  },
+  {
+   "id": "stage-physics",
+   "subject": "physics",
+   "title": "A spring oscillator that moves",
+   "start": 19.566666666666666,
+   "duration": 16.3,
+   "cues": [
+    3.2,
+    4.4,
+    6.9,
+    7.7
+   ]
+  },
+  {
+   "id": "chem-reaction",
+   "subject": "chem",
+   "title": "Bonds break, atoms rearrange",
+   "start": 35.86666666666667,
+   "duration": 15.066666666666666,
+   "cues": [
+    0.4,
+    6.2,
+    7.4,
+    9.4,
+    10.7
+   ]
+  },
+  {
+   "id": "map-history",
+   "subject": "histgeo",
+   "title": "The sea route to India",
+   "start": 50.93333333333333,
+   "duration": 19.566666666666666,
+   "cues": [
+    0.4,
+    6.2,
+    9.7,
+    11.4,
+    13.4
+   ]
+  },
+  {
+   "id": "passage-poem",
+   "subject": "lit",
+   "title": "Close reading of a poem",
+   "start": 70.5,
+   "duration": 19.3,
+   "cues": [
+    0.4,
+    6.4,
+    13.7,
+    15.9
+   ]
+  },
+  {
+   "id": "axes-derivative",
+   "subject": "math",
+   "title": "The secant becomes the tangent",
+   "start": 89.8,
+   "duration": 17.3,
+   "cues": [
+    0.9,
+    9.4,
+    12.4
+   ]
+  },
+  {
+   "id": "array-quicksort",
+   "subject": "cs",
+   "title": "Quick sort, step by step",
+   "start": 107.1,
+   "duration": 22.3,
+   "cues": [
+    0.4,
+    3.9,
+    8.2,
+    11.2,
+    13.4,
+    15.4,
+    17.2
+   ]
+  }
+ ]
+}

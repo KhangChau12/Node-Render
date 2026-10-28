@@ -1,0 +1,36 @@
+{
+  "name": "@lecture/web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3210",
+    "build": "next build",
+    "start": "next start -p 3210",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.136",
+    "@ai-sdk/openai-compatible": "^1.0.59",
+    "@lecture/kit": "*",
+    "@remotion/bundler": "4.0.539",
+    "@remotion/player": "4.0.539",
+    "@remotion/renderer": "4.0.539",
+    "ai": "^5.0.282",
+    "diff": "^8.0.2",
+    "katex": "^0.19.1",
+    "next": "15.5.28",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.539",
+    "sucrase": "^3.35.0",
+    "undici": "^6.29.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.7.2"
+  }
+}

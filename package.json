@@ -1,0 +1,29 @@
+{
+  "name": "node-render",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn a prompt into a lecture video: AI drafts the lesson and script with you, then builds the video with Remotion.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @lecture/web",
+    "build": "npm run docs -w @lecture/kit && npm run build -w @lecture/web",
+    "start": "npm run start -w @lecture/web",
+    "kit:studio": "npm run studio -w @lecture/kit",
+    "kit:docs": "npm run docs -w @lecture/kit",
+    "typecheck": "npm run typecheck -w @lecture/kit && npm run typecheck -w @lecture/web",
+    "site:media": "npm run media -w @lecture/site",
+    "site:build": "npm run build -w @lecture/site"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "overrides": {
+    "zod@^4": "^4.6.7",
+    "postcss": "^8.5.10",
+    "undici": "^6.23.0"
+  }
+}

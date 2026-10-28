@@ -1,0 +1,17 @@
+{
+  "name": "@lecture/site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Landing page of Node Render: product tour and kit reference, static, bilingual (English / Vietnamese).",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "media": "tsx scripts/render-media.ts",
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "4.0.539",
+    "@remotion/renderer": "4.0.539",
+    "tsx": "^4.19.2"
+  }
+}
